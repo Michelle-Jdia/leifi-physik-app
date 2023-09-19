@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VArticleBox > snapshot 1`] = `
+<div
+  class="article-box v-relative v-flex v-min-h-[10rem] v-flex-col v-items-start v-justify-end v-hyphens-auto v-rounded-sm v-border v-border-gray-20 v-bg-white v-p-box v-text-left v-shadow"
+>
+  <!--v-if-->
+  <v-badge-stub
+    modifier="v-mb-auto v-bg-gray-50"
+  >
+    nicht gelernt
+  </v-badge-stub>
+  <div
+    class="v-mt-box"
+  >
+    
+    Mechanik
+    
+  </div>
+  <h4
+    class="v-h4"
+  >
+    Masse und Volumen
+  </h4>
+  <h5
+    class="v-h5 v-text-ty-helper"
+  >
+    Grundwissen
+  </h5>
+</div>
+`;

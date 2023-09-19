@@ -1,0 +1,41 @@
+{
+    "compilerOptions": {
+        "types": ["vitest/globals"],
+        "target": "esnext",
+        "module": "esnext",
+        "useDefineForClassFields": true,
+        "moduleResolution": "node",
+        "noUncheckedIndexedAccess": true,
+        "strict": true,
+        "jsx": "preserve",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "lib": ["esnext", "dom"],
+        "skipLibCheck": true,
+        "noEmit": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/src/*": ["src/*"],
+            "@/env/*": ["src/env/*"],
+            "@/application/*": ["src/application/*"],
+            "@/data/*": ["src/data/*"],
+            "@/presentation/*": ["src/presentation", "src/presentation/*"],
+            "@/connection/*": ["src/connection/*"],
+            "@/store/*": ["src/connection/store/*"],
+            "@/atom/*": ["src/presentation/component/atom/*"],
+            "@/molecule/*": ["src/presentation/component/molecule/*"],
+            "@/organism/*": ["src/presentation/component/organism/*"],
+            "@/template/*": ["src/presentation/component/template/*"],
+            "@/layout/*": ["src/presentation/component/layout/*"],
+            "@/page/*": ["src/presentation/component/page/*"],
+            "@/style/*": ["src/presentation/style/*"],
+        }
+    },
+    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "src/presentation/story/*.story.ts"],
+    "references": [{ "path": "./tsconfig.node.json" }],
+    "exclude": [
+        "dist",
+        "node_modules"
+    ]
+}

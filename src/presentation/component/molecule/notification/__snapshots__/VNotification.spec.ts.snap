@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VNotification > snapshot 1`] = `
+<div
+  class="notification relative flex flex-col rounded-sm border border-gray-20 bg-white p-box shadow"
+>
+  <!--v-if-->
+  <div
+    class="mb-2 flex w-full items-center justify-between"
+  >
+    <v-badge-stub
+      modifier="mr-box bg-gray-20"
+    >
+      Mechanik
+    </v-badge-stub>
+    <span
+      class="text-h5 text-ty-headline"
+    >
+      2023
+    </span>
+  </div>
+  <h5
+    class="v-h5"
+  >
+    
+    Masse und Volumen
+    
+  </h5>
+</div>
+`;

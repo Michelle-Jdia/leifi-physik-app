@@ -1,0 +1,16 @@
+@layer base {
+    @for $i from 1 through 5 {
+        .v-h#{$i} {
+            @apply v-text-h#{$i} md:v-text-h#{$i}-tablet v-text-ty-headline;
+        }
+    }
+
+    .v-p {
+        @apply v-font-light v-leading-md;
+    }
+
+    .v-p,
+    .v-span {
+        @apply v-text-copy v-text-ty-copy md:v-text-copy-tablet;
+    }
+}

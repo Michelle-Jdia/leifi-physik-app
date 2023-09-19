@@ -1,0 +1,47 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VArticleEditItem > snapshot 1`] = `
+<div
+  class="article-edit-item v-flex v-items-center v-rounded v-bg-white v-p-box"
+  lines="none"
+>
+  <v-checkbox-stub
+    modifier="v-mr-auto v-w-full"
+    value="1"
+  >
+    Mechanik 
+    <div
+      class="v-h5 v-text-ty-helper"
+    >
+      Grundwissen
+    </div>
+  </v-checkbox-stub>
+  <div
+    class="v-ml-box v-flex"
+  >
+    <!--v-if-->
+    <v-icon-stub
+      data-testid="article-edit-item-close"
+      modifier="v-cursor-pointer"
+      size="default"
+      src="icon/close.svg"
+      withspaceleft="false"
+      withspaceright="false"
+    />
+    <anonymous-stub
+      class="v-ml-box-xl"
+      routerlink="Symbol()"
+      slot="end"
+    >
+      <v-icon-stub
+        data-testid="article-edit-item-reorder"
+        modifier="false"
+        size="default"
+        src="icon/dots.svg"
+        withspaceleft="false"
+        withspaceright="false"
+      />
+    </anonymous-stub>
+  </div>
+</div>
+`;

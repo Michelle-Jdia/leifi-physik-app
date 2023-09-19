@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VContentPlaceholder > snapshot 1`] = `
+<button
+  class="content-placeholder flex w-full items-center justify-center rounded-sm border border-dashed border-gray-50 bg-white p-[3.8rem]"
+>
+  <v-icon-stub
+    modifier="false"
+    size="sm"
+    src="icon/all-content.svg"
+    withspaceleft="false"
+    withspaceright="true"
+  />
+  <h4>
+    Alle Inhalte durchsuchen
+  </h4>
+</button>
+`;
+
+exports[`VContentPlaceholder > snapshot 2`] = `
+<button
+  class="content-placeholder flex w-full items-center justify-center rounded-sm border border-dashed border-gray-50 bg-white p-[2.2rem]"
+>
+  <v-icon-stub
+    modifier="false"
+    size="sm"
+    src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'><path stroke-linecap='round' stroke-linejoin='round' d='M256 112v288M400 256H112' class='ionicon-fill-none ionicon-stroke-width'/></svg>"
+    withspaceleft="false"
+    withspaceright="true"
+  />
+  <h4>
+    Artikel hinzufügen
+  </h4>
+</button>
+`;

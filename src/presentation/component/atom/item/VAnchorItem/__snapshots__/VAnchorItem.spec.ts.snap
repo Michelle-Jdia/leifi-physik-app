@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VAnchorItem > snapshot 1`] = `
+<div
+  class="anchor-item v-flex v-items-center"
+>
+  <v-icon-stub
+    class="v-mr-box-xs"
+    data-testid="link-icon"
+    modifier="false"
+    size="sm"
+    src="icon/play.svg"
+    withspaceleft="false"
+    withspaceright="false"
+  />
+  <a
+    class="v-font-light v-leading-md v-text-primary v-underline"
+  >
+    
+    Mechanik
+    
+  </a>
+</div>
+`;

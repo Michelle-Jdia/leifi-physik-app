@@ -1,0 +1,10 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VBranchHeader > snapshot 1`] = `
+<v-header-stub>
+  
+  Mechanik
+  
+  <!--v-if-->
+</v-header-stub>
+`;

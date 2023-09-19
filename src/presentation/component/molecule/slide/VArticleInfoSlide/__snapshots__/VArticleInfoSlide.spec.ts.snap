@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VArticleInfoSlide > snapshot 1`] = `
+<v-slide-stub
+  modifier="article-info-slide"
+  slidebackground=""
+>
+  <div
+    class="mb-box-sm"
+  >
+    <v-badge-stub
+      color="v-bg-yellow-80"
+      modifier="false"
+    >
+      Mechanik
+    </v-badge-stub>
+    <!--v-if-->
+    <!--v-if-->
+  </div>
+  <div
+    class="v-mt-box"
+  >
+    <h3
+      class="v-text-h4 md:v-text-h3"
+    >
+      Title
+    </h3>
+    <span
+      class="v-h5 v-mt-2 v-inline-block v-text-ty-helper"
+    >
+      Subtitle
+    </span>
+  </div>
+  <div
+    class="v-mt-box"
+  >
+    
+    <anonymous-stub />
+    
+  </div>
+</v-slide-stub>
+`;

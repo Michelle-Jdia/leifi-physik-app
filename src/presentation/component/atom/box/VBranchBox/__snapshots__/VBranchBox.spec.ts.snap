@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VBranchBox > snapshot 1`] = `
+<div
+  class="branch-box v-flex v-min-h-[3.2rem] v-items-center v-rounded v-border v-border-gray-50 v-bg-gray-20 v-p-box-sm md:v-min-h-[3.5rem]"
+>
+  <anonymous-stub
+    alt="mechanic"
+    class="v-w-[1.75rem] v-min-w-[1.75rem] v-overflow-hidden v-rounded md:v-w-[2.25rem] md:v-min-w-[2.25rem]"
+    ionerror="Symbol()"
+    ionimgdidload="Symbol()"
+    ionimgwillload="Symbol()"
+    routerlink="Symbol()"
+    src="/image/category/mechanic/mechanic.svg"
+  />
+  <h2
+    class="v-ml-icon v-hyphens-auto v-font-light v-text-sm v-text-ty-headline md:v-text-h4"
+  >
+    
+    Mechanik
+    
+  </h2>
+</div>
+`;

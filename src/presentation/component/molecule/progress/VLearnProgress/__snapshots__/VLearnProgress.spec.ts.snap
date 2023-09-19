@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VLearnProgress > snapshot 1`] = `
+<div
+  class="learn-progress"
+>
+  <v-toggle-stub
+    data-testid="toggle-progress-bar"
+    modelvalue="false"
+    modifier="v-flex v-justify-end"
+  >
+    <h5
+      class="md:v-text-h4"
+    >
+      
+      Lernmodus
+      
+    </h5>
+  </v-toggle-stub>
+  <!--v-if-->
+</div>
+`;

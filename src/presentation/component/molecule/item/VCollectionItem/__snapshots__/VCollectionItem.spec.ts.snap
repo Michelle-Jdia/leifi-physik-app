@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VCollectionItem > snapshot 1`] = `
+<div
+  class="collection-item v-relative v-flex v-items-center v-justify-between v-rounded-sm v-border v-border-gray-20 v-bg-white v-p-box v-shadow"
+>
+  <h3
+    class="v-h3"
+  >
+    Masse und Volumen
+  </h3>
+  <!--v-if-->
+  <!--v-if-->
+  <v-badge-stub
+    modifier="v-ml-box-sm"
+  >
+    Mechanik
+  </v-badge-stub>
+</div>
+`;

@@ -1,0 +1,19 @@
+ion-item {
+    --min-height: 0;
+    --padding-top: 0;
+    --padding-start: 0;
+    --padding-bottom: 0;
+    --padding-end: 0;
+}
+
+ion-title {
+    padding: 0;
+}
+
+// @todo jesus christ, what is wrong with ionic
+ion-label,
+ion-item {
+    padding: 0;
+    margin: 0;
+    white-space: pre-wrap !important;
+}

@@ -1,0 +1,7 @@
+*.ts
+*.json
+*.js
+*.svg
+src/test-result/**/*
+src/presentation/style/theme/colors.css
+src/presentation/style/static/*

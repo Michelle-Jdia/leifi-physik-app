@@ -1,0 +1,8 @@
+{
+  "name": "LEIFIphysik",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue-vite",
+  "id": "fed41bbf"
+}

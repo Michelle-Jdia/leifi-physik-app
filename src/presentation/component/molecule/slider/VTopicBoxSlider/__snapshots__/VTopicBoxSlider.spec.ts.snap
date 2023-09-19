@@ -1,0 +1,58 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VTopicBoxSlider > snapshot 1`] = `
+<div
+  class="topic-box-slider v-rounded v-p-box-lg"
+>
+  <router-link
+    class="v-inline-flex v-items-center"
+    to="[object Object]"
+  >
+    <anonymous-stub
+      alt="mechanic"
+      class="v-w-[1.5rem] v-overflow-hidden v-rounded"
+      ionerror="Symbol()"
+      ionimgdidload="Symbol()"
+      ionimgwillload="Symbol()"
+      routerlink="Symbol()"
+      src="/image/category/mechanic/mechanic.svg"
+    />
+    <span
+      class="v-ml-box v-text-h3 v-text-ty-headline v-underline"
+    >
+      
+      Mechanik
+      
+    </span>
+  </router-link>
+  
+  
+  <v-slider-stub
+    modifier="v-mt-box !v-overflow-visible v-rounded"
+    modules=""
+    slidesperview="2.3"
+    slidesperviewtablet="5.3"
+    spacebetweenslides="8"
+  >
+    
+    <swiper-slide-stub
+      class="v-overflow-hidden v-rounded v-bg-white"
+      lazy="false"
+      tag="div"
+    >
+      <router-link
+        class="v-h-full v-w-full v-text-ty-headline"
+        to="[object Object]"
+      >
+        <v-topic-image-box-stub
+          img="[object Object]"
+          modifier="v-h-[9rem] md:v-h-[11rem]"
+        >
+          Masse und Volumen
+        </v-topic-image-box-stub>
+      </router-link>
+    </swiper-slide-stub>
+    
+  </v-slider-stub>
+</div>
+`;
