@@ -1,0 +1,12 @@
+/*manuelle Liste fuer Aufgaben*/
+.p_abc {
+    margin-left: 1.5em;
+    text-align: justify;
+}
+
+.span_abc {
+    display: inline-block;
+    margin-left: -1.5em;
+    width: 1.5em;
+    font-weight: bold;
+}
