@@ -1,6 +1,6 @@
 import { render } from '@testing-library/vue';
-import { testSnapshot } from '@/presentation/helper/test';
 import { describe, expect, test } from 'vitest';
+import { testSnapshot } from '@/presentation/helper/test';
 import { branch } from '@/presentation/static/branch';
 import VBranchBox from '@/atom/box/VBranchBox/VBranchBox.vue';
 

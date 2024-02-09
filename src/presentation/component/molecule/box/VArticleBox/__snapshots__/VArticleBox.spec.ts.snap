@@ -5,11 +5,16 @@ exports[`VArticleBox > snapshot 1`] = `
   class="article-box v-relative v-flex v-min-h-[10rem] v-flex-col v-items-start v-justify-end v-hyphens-auto v-rounded-sm v-border v-border-gray-20 v-bg-white v-p-box v-text-left v-shadow"
 >
   <!--v-if-->
-  <v-badge-stub
-    modifier="v-mb-auto v-bg-gray-50"
+  <div
+    class="v-mb-auto"
   >
-    nicht gelernt
-  </v-badge-stub>
+    <v-badge-stub
+      modifier="v-bg-gray-50 v-mr-box"
+    >
+      nicht gelernt
+    </v-badge-stub>
+    <!--v-if-->
+  </div>
   <div
     class="v-mt-box"
   >
@@ -18,12 +23,12 @@ exports[`VArticleBox > snapshot 1`] = `
     
   </div>
   <h4
-    class="v-h4"
+    class="v-h4 v-mt-1"
   >
     Masse und Volumen
   </h4>
   <h5
-    class="v-h5 v-text-ty-helper"
+    class="v-h5 v-mt-1 v-font-fflight v-text-ty-helper"
   >
     Grundwissen
   </h5>

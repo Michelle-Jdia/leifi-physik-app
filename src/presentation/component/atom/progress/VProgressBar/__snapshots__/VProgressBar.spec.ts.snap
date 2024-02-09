@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VProgressBar > snapshot 1`] = `
+<div
+  class="v-bg-green-20 progress-bar v-relative v-rounded-sm v-p-[0.25rem] md:v-p-box-sm"
+  data-v-ce7fd17e=""
+>
+  <anonymous-stub
+    buffer="Symbol()"
+    class="v-h-[1.75rem] v-rounded-sm md:v-h-[2rem]"
+    color="Symbol()"
+    data-v-ce7fd17e=""
+    reversed="Symbol()"
+    routerlink="Symbol()"
+    type="Symbol()"
+    value="1"
+  />
+  <h5
+    class="md:v-h4 v-absolute v-left-icon v-top-1/2 v--translate-y-1/2 md:v-left-box-md"
+    data-v-ce7fd17e=""
+  >
+    3 von 3 Inhalten gelernt 
+  </h5>
+</div>
+`;

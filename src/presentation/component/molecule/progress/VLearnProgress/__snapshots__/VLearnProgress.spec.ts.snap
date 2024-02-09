@@ -4,19 +4,29 @@ exports[`VLearnProgress > snapshot 1`] = `
 <div
   class="learn-progress"
 >
-  <v-toggle-stub
-    data-testid="toggle-progress-bar"
-    modelvalue="false"
-    modifier="v-flex v-justify-end"
+  <div
+    class="v-flex v-items-center"
   >
-    <h5
-      class="md:v-text-h4"
+    
+    
+    <v-toggle-stub
+      data-testid="toggle-progress-bar"
+      modelvalue="false"
+      modifier="v-flex v-ml-auto"
     >
-      
-      Lernmodus
-      
-    </h5>
-  </v-toggle-stub>
-  <!--v-if-->
+      <h5
+        class="md:v-text-h4"
+      >
+        
+        Lernmodus
+        
+      </h5>
+    </v-toggle-stub>
+  </div>
+  <v-transition-stub
+    type="slide-down"
+  >
+    <!--v-if-->
+  </v-transition-stub>
 </div>
 `;

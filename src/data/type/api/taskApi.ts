@@ -1,5 +1,5 @@
-import type { RenderedStringApi } from '@/data/type/api/field/renderedStringApi';
 import type { ObjectRelationApi } from '@/data/type/api/field/objectRelationApi';
+import type { RenderedStringApi } from '@/data/type/api/field/renderedStringApi';
 
 export interface TaskApi {
     id: string;

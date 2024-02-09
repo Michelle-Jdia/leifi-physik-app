@@ -23,16 +23,23 @@
             "@/presentation/*": ["src/presentation", "src/presentation/*"],
             "@/connection/*": ["src/connection/*"],
             "@/store/*": ["src/connection/store/*"],
+            "@/state/*": ["src/connection/state/*"],
             "@/atom/*": ["src/presentation/component/atom/*"],
             "@/molecule/*": ["src/presentation/component/molecule/*"],
             "@/organism/*": ["src/presentation/component/organism/*"],
+            "@/container/*": ["src/presentation/component/container/*"],
             "@/template/*": ["src/presentation/component/template/*"],
             "@/layout/*": ["src/presentation/component/layout/*"],
             "@/page/*": ["src/presentation/component/page/*"],
             "@/style/*": ["src/presentation/style/*"],
         }
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.vue", "src/presentation/story/*.story.ts"],
+    "include": [
+        "src/**/*.ts", 
+        "src/**/*.d.ts", 
+        "src/**/*.vue", 
+        "src/presentation/story/*.story.ts"
+    ],
     "references": [{ "path": "./tsconfig.node.json" }],
     "exclude": [
         "dist",

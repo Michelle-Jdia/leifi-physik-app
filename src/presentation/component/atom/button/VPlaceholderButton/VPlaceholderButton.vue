@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { ClassValue } from 'clsx';
 import type { ComputedRef } from 'vue';
+import { addOutline } from 'ionicons/icons';
 import { computed } from 'vue';
 import { cn } from '@/presentation/helper/style';
-import { addOutline } from 'ionicons/icons';
 import VIcon from '@/atom/icon/VIcon/VIcon.vue';
 
 interface Props {

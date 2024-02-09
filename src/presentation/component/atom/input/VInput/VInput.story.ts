@@ -33,6 +33,7 @@ Base.args = {
 
 WithIcon.args = {
     icon: search,
+    iconModifier: 'v-text-ty-helper',
     // @ts-ignore
     placeholder: 'placeholder',
 };

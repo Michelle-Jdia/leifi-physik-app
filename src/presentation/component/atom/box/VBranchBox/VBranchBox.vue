@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { ClassValue } from 'clsx';
 import type { Img } from '@/presentation/type/img';
-import { cn } from '@/presentation/helper/style';
+import type { ClassValue } from 'clsx';
 import { IonImg } from '@ionic/vue';
+import { cn } from '@/presentation/helper/style';
 
 interface Props {
     img: Img;
@@ -29,7 +29,7 @@ defineProps<Props>();
 
         <h2
             v-if="$slots.default"
-            class="v-ml-icon v-hyphens-auto v-font-light v-text-sm v-text-ty-headline md:v-text-h4"
+            class="v-ml-icon v-overflow-hidden v-hyphens-auto v-font-fflight v-text-sm v-text-ty-headline md:v-text-h4"
         >
             <slot />
         </h2>

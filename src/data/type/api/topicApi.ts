@@ -7,6 +7,7 @@ export interface TopicApi {
     status: boolean;
     changed: string;
     name: string;
+    weight: number;
     description: TextApi;
     field_topic_info_outlook: string | null;
     field_topic_info_downloads: string | null;

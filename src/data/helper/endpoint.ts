@@ -1,16 +1,23 @@
-import type { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import type { LinkManagerKeys } from '@/data/helper/linkManager';
-import axios from 'axios';
+import type { HttpOptions, HttpResponse, HttpResponseType } from '@capacitor/core';
+import type { Method } from 'axios';
+import { CapacitorHttp } from '@capacitor/core';
 import { isDev } from '@/env/app';
 import { devLog } from '@/application/helper/log';
-import { adapter } from '@/data/helper/networkAdapter';
 import { linkManager } from '@/data/helper/linkManager';
+import { defaultHeaders } from '@/data/helper/networkAdapter';
 
-export type EndpointParams = Record<string, string | number | boolean | undefined | string[]>;
+// import { adapter } from '@/data/helper/networkAdapter';
+
+interface GenericHttpResponse<O> extends HttpResponse {
+    data: O;
+}
+
+export type EndpointParams = Record<string, string | string[]>;
 
 export type EndpointPayload = Record<string, any>;
 
-export type EndpointHeaders = Record<string, string | number | boolean>;
+export type EndpointHeaders = Record<string, string>;
 
 export type EndpointInput = {
     params?: EndpointParams;
@@ -21,8 +28,11 @@ export type EndpointInput = {
 export interface EndpointConfig extends EndpointInput {
     link: LinkManagerKeys;
     method?: Method;
-    configureAxios?: (axiosConfig: AxiosRequestConfig) => AxiosRequestConfig;
+    configureEndpoint?: (httpConfig: HttpOptions) => HttpOptions;
+    responseType?: HttpResponseType;
 }
+
+type EndpointPossibleOutput<O> = Promise<GenericHttpResponse<Partial<O> | O>>;
 
 const startStyle = 'color: hsl(199, 96%, 74%)';
 const endStyle = 'color: hsl(156, 72%, 67%)';
@@ -32,71 +42,79 @@ function handleError(error: unknown | Error): void {
         return;
     }
 
-    if (axios.isAxiosError(error)) {
-        if (error.response) {
-            devLog('data', error.response.data);
-            devLog('status', error.response.status);
-            devLog('header', error.response.headers);
-
-            return;
-        }
-
-        if (error.request) {
-            devLog('request', error.request);
-
-            return;
-        }
-
-        devLog('error', error.message);
-    }
+    // if (axios.isAxiosError(error)) {
+    //     if (error.response) {
+    //         devLog('data', error.response.data);
+    //         devLog('status', error.response.status);
+    //         devLog('header', error.response.headers);
+    //
+    //         return;
+    //     }
+    //
+    //     if (error.request) {
+    //         devLog('request', error.request);
+    //
+    //         return;
+    //     }
+    //
+    //     devLog('error', error.message);
+    // }
 
     devLog('error', error);
 }
 
-export const createEndpoint =
-    <I extends EndpointInput = never, O = any>(config: EndpointConfig) =>
-    async (input?: I): Promise<AxiosResponse<O> | never> => {
+export function createEndpoint<O>(config: EndpointConfig): () => EndpointPossibleOutput<O>;
+
+export function createEndpoint<I extends EndpointInput, O>(
+    config: EndpointConfig,
+): (input: I) => EndpointPossibleOutput<O>;
+
+export function createEndpoint<I extends EndpointInput, O>(config: EndpointConfig) {
+    return async (input?: I): EndpointPossibleOutput<O> => {
         const params = {
             ...config.params,
             ...input?.params,
         };
 
-        const data = {
-            ...config.data,
-            ...input?.data,
-        };
+        // const data = {
+        //     ...config.data,
+        //     ...input?.data,
+        // };
 
         const headers = {
+            ...defaultHeaders,
             ...config.headers,
             ...input?.headers,
         };
 
         const method = config.method || 'GET';
         const url = linkManager.getLink(config.link);
+        const responseType = config.responseType || 'json';
 
-        const defaultAxiosConfig: AxiosRequestConfig = {
+        const defaultHttpConfig: HttpOptions = {
             url,
             method,
-            data,
             params,
+            // data, // Can't use data with GET method
             headers,
+            responseType,
         };
 
-        const createAxiosConfig = (defaultAxiosConfig: AxiosRequestConfig) => {
-            if (!config.configureAxios) {
-                return defaultAxiosConfig;
+        const createHttpConfig = (defaultHttpConfig: HttpOptions) => {
+            if (!config.configureEndpoint) {
+                return defaultHttpConfig;
             }
 
-            return config.configureAxios(defaultAxiosConfig);
+            return config.configureEndpoint(defaultHttpConfig);
         };
 
-        const axiosConfig = createAxiosConfig(defaultAxiosConfig);
+        const httpConfig = createHttpConfig(defaultHttpConfig);
 
         try {
-            devLog(`%c start`, startStyle, axiosConfig);
+            devLog(`%c start`, startStyle, httpConfig);
 
             const startStamp = performance.now();
-            const response = await adapter.request<O>(axiosConfig);
+            const response: GenericHttpResponse<O> = await CapacitorHttp.request(httpConfig);
             const endStamp = performance.now();
             const execTime = Math.round(endStamp - startStamp);
 
@@ -109,3 +127,4 @@ export const createEndpoint =
             throw error;
         }
     };
+}

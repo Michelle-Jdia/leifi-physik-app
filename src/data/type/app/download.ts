@@ -1,12 +1,15 @@
+import type { StructuredString } from '@/data/type/app/field/StructuredString';
 import type { Media } from '@/data/type/app/media';
+import type { ContentType } from '@/data/type/helper/contentType';
 
 export interface Download {
     id: string;
+    type: ContentType.DOWNLOAD;
     changed: number;
     title: string;
     animation_background: string;
     animation_caption: string;
-    animation_code: string;
+    animation_code: StructuredString | null;
     animation_intro: string;
     animation_type: string;
     download_description: string;

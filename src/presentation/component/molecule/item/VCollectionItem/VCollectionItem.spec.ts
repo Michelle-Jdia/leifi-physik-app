@@ -1,18 +1,14 @@
 import { render } from '@testing-library/vue';
 import { describe, expect, test } from 'vitest';
 import { testSnapshot } from '@/presentation/helper/test';
-import { topic } from '@/presentation/static/topic';
-import { branch } from '@/presentation/static/branch';
+import { collection } from '@/presentation/static/collection';
 import VCollectionItem from '@/molecule/item/VCollectionItem/VCollectionItem.vue';
 
 describe('VCollectionItem', () => {
     const options = {
         props: {
-            title: topic.title,
-            branch: {
-                title: branch.title,
-                color: '',
-            },
+            subtitle: collection.title,
+            privateTitle: collection.private_title,
         },
         global: {
             stubs: {
@@ -21,30 +17,85 @@ describe('VCollectionItem', () => {
         },
     };
 
-    test('shows the correct text', () => {
+    test('shows the correct text without icons', () => {
         const { getByText, queryByTestId } = render(VCollectionItem, options);
 
-        getByText(topic.title);
-        getByText(branch.title);
+        getByText(collection.title);
+        getByText(collection.private_title);
 
         expect(queryByTestId('collection-item-notification')).toBeFalsy();
         expect(queryByTestId('collection-item-feed')).toBeFalsy();
     });
 
-    test('doesnt show the text if it was not passed', () => {
-        const { queryByText, getByTestId } = render(VCollectionItem, {
+    test('does not show the text if there was no text passed', () => {
+        const { queryByText, queryByTestId } = render(VCollectionItem, {
             ...options,
             props: {
-                title: '',
+                subtitle: '',
+                privateTitle: '',
+            },
+        });
+
+        expect(queryByText(collection.title)).toBeFalsy();
+        expect(queryByText(collection.private_title)).toBeFalsy();
+
+        expect(queryByTestId('collection-item-notification')).toBeFalsy();
+        expect(queryByTestId('collection-item-feed')).toBeFalsy();
+    });
+
+    test('subscribed icon shows up', () => {
+        const { queryByTestId } = render(VCollectionItem, {
+            ...options,
+            props: {
+                ...options.props,
+                isSubscribed: true,
+            },
+        });
+
+        expect(queryByTestId('collection-item-notification')).toBeFalsy();
+        queryByTestId('collection-item-feed');
+    });
+
+    test('subscribed icon + notification icon show up', () => {
+        const { queryByTestId } = render(VCollectionItem, {
+            ...options,
+            props: {
+                ...options.props,
+                isSubscribed: true,
                 withNotification: true,
             },
         });
 
-        expect(queryByText(topic.title)).toBeFalsy();
-        expect(queryByText(branch.title)).toBeFalsy();
+        queryByTestId('collection-item-notification');
+        queryByTestId('collection-item-feed');
+    });
 
-        getByTestId('collection-item-notification');
-        getByTestId('collection-item-feed');
+    test('my collection without icons or text', () => {
+        const { queryByTestId } = render(VCollectionItem, {
+            ...options,
+            props: {
+                ...options.props,
+                isMyCollection: true,
+                isLearnMode: false,
+            },
+        });
+
+        queryByTestId('collection-item-notification');
+        queryByTestId('collection-item-feed');
+    });
+
+    test('my collection with learn mode status', () => {
+        const { queryByTestId } = render(VCollectionItem, {
+            ...options,
+            props: {
+                ...options.props,
+                isMyCollection: true,
+                isLearnMode: true,
+            },
+        });
+
+        queryByTestId('collection-item-notification');
+        queryByTestId('collection-item-feed');
     });
 
     testSnapshot(VCollectionItem, options);

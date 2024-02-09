@@ -4,7 +4,7 @@
 
 ## [CLI](./cli.md)
 
-## [Code convenstions](./code-conventions.md)
+## [Code conventions](./code-conventions.md)
 
 ## [Data flow](./data-flow.md)
 
@@ -13,3 +13,7 @@
 ## [Tech stack](./tech-stack.md)
 
 ## [Testing](./testing.md)
+
+## [Native app](./native.md)
+
+## [Release](./release.md)

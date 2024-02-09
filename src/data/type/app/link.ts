@@ -1,5 +1,8 @@
+import type { ContentType } from '@/data/type/helper/contentType';
+
 export interface Link {
     id: string;
+    type: ContentType.LINK;
     changed: number;
     title: string;
     description: string;

@@ -1,0 +1,8 @@
+// add only tailwind overwrites here
+@layer base {
+    ul,
+    ol {
+        @apply v-list-disc v-pl-box-md v-font-fflight #{!important};
+        @apply v-h5 v-font-light;
+    }
+}

@@ -1,0 +1,73 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VProfileAvatar > snapshot 1`] = `
+<div
+  class="profile-avatar v-relative v-flex v-items-center v-justify-center v-rounded-md v-bg-gray-20"
+>
+  <v-avatar-stub
+    modifier="v-h-[15rem] v-w-[15rem]"
+  />
+  <v-icon-stub
+    class="v-absolute v-bottom-box-lg v-right-box-md"
+    modifier="false"
+    size="default"
+    src="icon/camera-tablet.svg"
+    withspaceleft="false"
+    withspaceright="false"
+  />
+</div>
+`;
+
+exports[`VProfileAvatar > snapshot 2`] = `
+<div
+  class="profile-avatar v-relative v-flex v-items-center v-justify-center v-rounded-md v-bg-gray-20"
+>
+  <v-avatar-stub
+    modifier="v-h-[15rem] v-w-[15rem]"
+  />
+  <v-icon-stub
+    class="v-absolute v-bottom-box-lg v-right-box-md"
+    modifier="false"
+    size="default"
+    src="icon/camera-tablet.svg"
+    withspaceleft="false"
+    withspaceright="false"
+  />
+</div>
+`;
+
+exports[`VProfileAvatar > with different window sizes > snapshot 1`] = `
+<div
+  class="profile-avatar v-relative v-flex v-items-center v-justify-center v-rounded-md v-bg-gray-20"
+>
+  <v-avatar-stub
+    modifier="v-h-[15rem] v-w-[15rem]"
+  />
+  <v-icon-stub
+    class="v-absolute v-bottom-box-lg v-right-box-md"
+    modifier="false"
+    size="default"
+    src="icon/camera-tablet.svg"
+    withspaceleft="false"
+    withspaceright="false"
+  />
+</div>
+`;
+
+exports[`VProfileAvatar > with different window sizes > snapshot 2`] = `
+<div
+  class="profile-avatar v-relative v-flex v-items-center v-justify-center v-rounded-md v-bg-gray-20"
+>
+  <v-avatar-stub
+    modifier="v-h-[15rem] v-w-[15rem]"
+  />
+  <v-icon-stub
+    class="v-absolute v-bottom-box-lg v-right-box-md"
+    modifier="false"
+    size="default"
+    src="icon/camera-tablet.svg"
+    withspaceleft="false"
+    withspaceright="false"
+  />
+</div>
+`;

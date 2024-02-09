@@ -1,6 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/vue3';
-import { branch } from '@/presentation/static/branch';
-import { topic } from '@/presentation/static/topic';
+import { collection } from '@/presentation/static/collection';
 import VCollectionItem from '@/molecule/item/VCollectionItem/VCollectionItem.vue';
 
 export default {
@@ -25,14 +24,32 @@ export const Base = Template.bind({});
 
 export const WithIcon = Template.bind({});
 
+export const WithNotification = Template.bind({});
+
+export const WithLearnStatus = Template.bind({});
+
 Base.args = {
-    title: topic.title,
-    branch: {
-        title: branch.title,
-        color: '',
-    },
+    privateTitle: collection.private_title,
+    subtitle: collection.title,
+    isSubscribed: false,
 };
 
 WithIcon.args = {
-    title: topic.title,
+    privateTitle: collection.private_title,
+    subtitle: collection.title,
+    isSubscribed: true,
+};
+
+WithNotification.args = {
+    privateTitle: collection.private_title,
+    subtitle: collection.title,
+    isSubscribed: true,
+    withNotification: true,
+};
+
+WithLearnStatus.args = {
+    privateTitle: collection.private_title,
+    subtitle: collection.title,
+    isLearnMode: true,
+    learnStatus: '3/3 Inhalten gelernt',
 };

@@ -1,129 +1,106 @@
 <script setup lang="ts">
-import type { SliderItem } from '@/molecule/slider/VArticleBoxSlider/VArticleBoxSlider.vue';
+import type { RefresherCustomEvent } from '@ionic/vue';
+import { SplashScreen } from '@capacitor/splash-screen';
 import { onIonViewWillEnter } from '@ionic/vue';
-import { search } from 'ionicons/icons';
-import { useBranches, useBranch } from '@/store/branchStore';
-import { useTopic } from '@/store/topicStore';
-import { useIssue } from '@/store/issueStore';
-import { getHistory } from '@/store/historyStore';
-import { createReactiveData } from '@/connection/helper/fetcher';
-import VBranchHeader from '@/layout/header/VBranchHeader/VBranchHeader.vue';
+import { onMounted, ref, watch } from 'vue';
+import { $t } from '@/application/translation';
+import { createRefresherHandler } from '@/connection/helper/refresher';
+import { RouteName } from '@/connection/router/routeName';
+import { useBranchState } from '@/state/branchState';
+import { useHomeState } from '@/state/homeState';
+import { getLearnedStatus } from '@/store/collectionStore';
+import VHomeHeader from '@/layout/header/VHomeHeader.vue';
 import VPage from '@/layout/page/VPage.vue';
-import VArticleBoxSlider from '@/molecule/slider/VArticleBoxSlider/VArticleBoxSlider.vue';
-import VPlaceholderButton from '@/atom/button/VPlaceholderButton/VPlaceholderButton.vue';
+import VCollectionSearchForm from '@/container/form/VCollectionSearchForm/VCollectionSearchForm.vue';
+import VGlobalSearchInput from '@/container/form/VGlobalSearchInput/VGlobalSearchInput.vue';
+import VArticleBoxSlider from '@/container/slider/VArticleBoxSlider/VArticleBoxSlider.vue';
+import VInputButton from '@/molecule/form/VInputButton/VInputButton.vue';
+import VCollectionItem from '@/molecule/item/VCollectionItem/VCollectionItem.vue';
 import VBranchBox from '@/atom/box/VBranchBox/VBranchBox.vue';
-import VLoader from '@/atom/loader/VLoader/VLoader.vue';
 import VButton from '@/atom/button/VButton/VButton.vue';
-import VInput from '@/atom/input/VInput/VInput.vue';
+import VPlaceholderButton from '@/atom/button/VPlaceholderButton/VPlaceholderButton.vue';
 import VIcon from '@/atom/icon/VIcon/VIcon.vue';
+import VLoader from '@/atom/loader/VLoader/VLoader.vue';
+import VRefresher from '@/atom/refresher/VRefresher/VRefresher.vue';
 
-const { data: branches, getData: getBranches } = useBranches();
+const homeState = useHomeState();
+const branchState = useBranchState();
 
-// @todo works only for issue now, need to extend this later
-const { data: history, getData: getHistoryData } = createReactiveData<never, SliderItem[] | void>(
-    async () => {
-        const history = (await getHistory()) || [];
+async function handleRefresh(event: RefresherCustomEvent): Promise<void> {
+    await createRefresherHandler({
+        event: event,
+        callback: async () => {
+            await branchState.getLiveTopicsAndBranches();
+            await homeState.getBranches();
+            await homeState.getFavorites();
+            await homeState.getHistory();
+            await homeState.getCollections();
+        },
+    });
+}
 
-        if (!history.length) {
-            return;
-        }
+onIonViewWillEnter(() => {
+    homeState.getBranches();
+    homeState.getFavorites();
+    homeState.getHistory();
+    homeState.getCollections();
+});
 
-        const sliderItems: SliderItem[] = [];
+const isMounted = ref(false);
+onMounted(() => (isMounted.value = true));
 
-        for (const item of history) {
-            if (item.type === 'issue') {
-                const { data: issue, getData: getIssue } = useIssue({
-                    params: {
-                        id: item.id,
-                    },
-                });
+watch(homeState, () => {
+    const isDataLoaded = homeState.branches && homeState.branches.length;
 
-                // eslint-disable-next-line no-await-in-loop
-                await getIssue();
-
-                if (!issue.value) {
-                    return;
-                }
-
-                const { data: topic, getData: getTopic } = useTopic({
-                    params: {
-                        id: issue.value.referenced_topic,
-                    },
-                });
-
-                // eslint-disable-next-line no-await-in-loop
-                await getTopic();
-
-                if (!topic.value) {
-                    return;
-                }
-
-                const { data: branch, getData: getBranch } = useBranch({
-                    params: {
-                        id: topic.value.referenced_branch,
-                    },
-                });
-
-                // eslint-disable-next-line no-await-in-loop
-                await getBranch();
-
-                if (!branch.value) {
-                    return;
-                }
-
-                sliderItems.push({
-                    title: issue.value.title,
-                    subtitle: issue.value.issue_category,
-                    link: {
-                        name: 'issue-id',
-                        params: {
-                            id: issue.value.id,
-                        },
-                    },
-                    badge: {
-                        title: branch.value.name,
-                        color: `v-bg-${branch.value.color}`,
-                    },
-                });
-            }
-        }
-
-        return sliderItems;
-    },
-)();
-
-onIonViewWillEnter(getBranches);
-onIonViewWillEnter(getHistoryData);
+    if (isDataLoaded && isMounted.value && document.readyState === 'complete') {
+        SplashScreen.hide();
+    }
+});
 </script>
 
 <template>
     <v-page>
-        <v-loader :logs="['useBranches', 'useBranch', 'useTopic']" />
+        <v-loader :logs="['useBranches', 'useTopic', 'useBranchesLive', 'getTopicsByBranchLive']" />
 
         <template #header>
-            <v-branch-header>Willkommen bei LEIFIphysik</v-branch-header>
+            <v-home-header :is-history="!!homeState.history">
+                {{ $t.home.title }}
+            </v-home-header>
         </template>
 
+        <template #refresher>
+            <v-refresher @ion-refresh="handleRefresh" />
+        </template>
+
+        <v-global-search-input modifier="v-mb-box-xl" />
+
         <v-article-box-slider
-            v-if="history"
-            :last-box="{ title: 'Zu deinen Favoriten', link: { name: 'favorite' } }"
-            :slider-items="history"
-        />
+            v-if="homeState.favorites?.length"
+            :last-box="{ title: 'Zu deinen Favoriten', link: { name: RouteName.FAVORITE_INDEX } }"
+            :slider-items="homeState.favorites"
+            modifier="v-mb-box-xl md:v-mb-section-md"
+        >
+            Deine Favoriten
+        </v-article-box-slider>
 
-        <v-input
-            modifier=" md:v-hidden"
-            placeholder="Alle Inhalte durchsuchen oder Code eingeben..."
-            :icon="search"
-        />
+        <v-article-box-slider
+            v-if="homeState.history?.length"
+            :last-box="{ title: 'Zu deinem Verlauf', link: { name: RouteName.HISTORY_INDEX } }"
+            :slider-items="homeState.history"
+            modifier="v-mb-box-xl md:v-mb-section-md"
+        >
+            {{ $t.history.title }}
+        </v-article-box-slider>
 
-        <h2 class="v-h2 v-mt-box-xl">Teilgebiete der Physik</h2>
+        <h2 class="v-h2">Teilgebiete der Physik</h2>
 
         <div
             class="v-mt-box-md v-grid v-grid-cols-2 v-gap-box-md md:v-mt-box-lg md:v-grid-cols-4 md:v-gap-box-lg"
         >
-            <template v-for="branch in branches" :key="branch.name">
-                <router-link :to="{ name: 'branch-id', params: { id: branch.id } }">
+            <template v-for="branch in homeState.branches" :key="branch.name">
+                <router-link :to="{ name: RouteName.BRANCH_ID, params: { id: branch.id } }">
                     <v-branch-box
+                        modifier="v-h-full"
                         :img="{
                             src: branch.icon?.url || '',
                             alt: branch.icon?.alt || '',
@@ -138,52 +115,77 @@ onIonViewWillEnter(getHistoryData);
         <h2 class="v-h2 v-mt-section md:v-mt-section-md">Sammlung deiner Lehrkraft</h2>
 
         <p class="v-p v-mt-box-xs md:v-mt-box-lg">
-            Sammlungen helfen dir z.B. bei der Vorbereitung lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-            aliquyam erat, sed diam voluptua.
+            Deine Lehrerin teilt ihre Sammlung über einen Short-Code oder einen QR-Code mit dir? Gib
+            den Short-Code in das Suchfeld ein oder fotografiere den QR-Code mit der Kamera um die
+            Sammlung auf deinem Gerät aufzurufen.
         </p>
 
-        <div
-            class="v-mt-box-md v-grid v-grid-cols-1 v-gap-x-box-md md:v-mt-box-lg md:v-grid-cols-2"
-        >
-            <v-input placeholder="Shortcode" variant="flat" />
-
-            <v-button modifier="v-mt-box-md md:v-mt-0" :router-link="{ name: 'collection-index' }">
-                <v-icon size="sm" src="/icon/collectionabo.svg" with-space-right />
-
-                Aufrufen
-            </v-button>
-        </div>
+        <v-collection-search-form is-grid />
 
         <h2 class="v-h2 v-mt-section md:v-mt-section-md">Eigene Sammlung erstellen</h2>
 
         <p class="v-p v-mt-box-xs md:v-mt-box-lg">
-            Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore
-            magna aliquyam erat, sed diam voluptua.
+            Behalte den Überblick über deine Artikel und Aufgaben. Organisiere deine Inhalte in
+            eignen Sammlungen.
         </p>
 
-        <div
-            class="v-mt-box-md v-grid v-grid-cols-1 v-gap-x-box-md md:v-mt-box-lg md:v-grid-cols-2"
-        >
-            <v-input placeholder="Name der Sammlung" variant="flat" />
+        <v-input-button
+            is-grid
+            icon="icon/add-collection.svg"
+            :button-text="$t.collection.create"
+            :placeholder="$t.collection.collectionName"
+            @on-submit="homeState.createAndNavigateToNewCollection"
+        />
 
-            <v-button modifier="v-mt-box-md md:v-mt-0" :router-link="{ name: 'collection-index' }">
-                <v-icon size="sm" src="/icon/add-collection.svg" with-space-right />
+        <h2 class="v-h2 v v-mt-section md:v-mt-section-md">
+            {{ $t.collection.yourMyCollections }}
+        </h2>
 
-                Erstellen
+        <p v-if="!homeState.collections?.length" class="v-p v-mt-box-xs md:v-mt-box-lg">
+            {{ $t.collection.noMyCollections }}
+        </p>
+
+        <template v-if="homeState.collections?.length">
+            <p class="v-p v-mt-box-xs md:v-mt-box-lg">{{ $t.collection.listMyCollections }}</p>
+
+            <div
+                v-for="collection in homeState.collections"
+                :key="collection.id"
+                class="v-mt-box-xl"
+            >
+                <router-link
+                    :to="{
+                        name: RouteName.COLLECTION_ID,
+                        params: { id: collection.id },
+                    }"
+                >
+                    <v-collection-item
+                        :is-subscribed="collection.isSubscribed"
+                        :is-learn-mode="collection.isLearnMode"
+                        :learn-status="getLearnedStatus(collection)"
+                        :subtitle="collection.title"
+                        :private-title="collection.private_title"
+                    />
+                </router-link>
+            </div>
+
+            <v-button
+                modifier="v-mt-box-md v-w-full"
+                :router-link="{ name: RouteName.COLLECTION_INDEX }"
+            >
+                <v-icon src="icon/collection-subscribe.svg" with-space-right />
+
+                {{ $t.collection.allCollections }}
             </v-button>
-        </div>
+        </template>
 
-        <h2 class="v-h2 v v-mt-section md:v-mt-section-md">Du hast noch keine Artikel gemerkt</h2>
-
-        <p class="v-p v-mt-box-xs md:v-mt-box-lg">
-            Sammlungen helfen dir z.B. bei der Vorbereitung lorem ipsum dolor sit amet, consetetur
-            sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
-            aliquyam erat, sed diam voluptua.
-        </p>
-
-        <router-link :to="{ name: 'branch-index' }" class="v-mt-box-md v-block md:v-mt-box-lg">
-            <v-placeholder-button />
-        </router-link>
+        <template v-if="!homeState.collections?.length">
+            <router-link
+                :to="{ name: RouteName.BRANCH_INDEX }"
+                class="v-mt-box-md v-block md:v-mt-box-lg"
+            >
+                <v-placeholder-button />
+            </router-link>
+        </template>
     </v-page>
 </template>

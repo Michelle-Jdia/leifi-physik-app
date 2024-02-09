@@ -1,19 +1,17 @@
+import type { ReadTopicByBranchInput, ReadTopicByIdInput } from '@/data/repository/topicRepository';
 import type { TopicApi } from '@/data/type/api/topicApi';
 import type { Topic } from '@/data/type/app/topic';
-import type { ReadTopicInput } from '@/data/repository/topicRepository';
-import { $readTopics, $readTopic, $readTopicsByBranch } from '@/data/repository/topicRepository';
-import {
-    $useTopicStorage,
-    $useTopicsStorage,
-    $useTopicsByBranchStorage,
-} from '@/data/storage/topicStorage';
-import { createFetcher } from '@/connection/helper/fetcher';
+import { $readTopic, $readTopicsByBranch } from '@/data/repository/topicRepository';
+import { $useTopicsByBranchStorage, $useTopicStorage } from '@/data/storage/topicStorage';
+import { ContentType } from '@/data/type/helper/contentType';
 import {
     parseDateStringToTimestamp,
-    parseObjectRelationArray,
     parseMediaItem,
+    parseObjectRelationArray,
     parseValueToString,
+    sortByWeight,
 } from '@/connection/helper/dataMap';
+import { createFetcher } from '@/connection/helper/fetcher';
 
 export enum TopicDegree {
     one = 'Sekundarstufe 1',
@@ -24,8 +22,10 @@ export enum TopicDegree {
 function createTopic(input: TopicApi): Topic {
     return {
         id: parseValueToString(input.id),
+        type: ContentType.TOPIC,
         changed: parseDateStringToTimestamp(input.changed),
         name: parseValueToString(input.name),
+        weight: input.weight,
         description: parseValueToString(input.description?.processed),
         info_outlook: parseValueToString(input.field_topic_info_outlook),
         downloads: parseValueToString(input.field_topic_info_downloads),
@@ -43,35 +43,81 @@ function createTopic(input: TopicApi): Topic {
     };
 }
 
-export const useTopics = createFetcher<never, Topic[]>(
-    async () => {
-        const { data } = await $readTopics();
-
-        return data.data.map(createTopic);
-    },
-    $useTopicsStorage,
-    {
-        log: 'useTopics',
-    },
-);
-
-export const getTopicsByBranch = createFetcher<ReadTopicInput, Topic[]>(
+export const useTopicsByBranch = createFetcher<ReadTopicByBranchInput, Topic[]>(
     async (input) => {
         const { data } = await $readTopicsByBranch(input);
 
-        return data.data.map((item) => {
-            return createTopic(item);
-        });
+        if (!data || !data.data) {
+            return;
+        }
+
+        const mappedData = data.data.map(createTopic);
+
+        return sortByWeight(mappedData);
     },
     $useTopicsByBranchStorage,
     {
         log: 'getTopicsByBranch',
+        useCache: true,
+        // async getLastFetchTime(input) {
+        //     const data = await $readTimeStorage('topic');
+        //     const branchId = input?.params.branchId;
+        //
+        //     if (!branchId || !data) {
+        //         return 0;
+        //     }
+        //
+        //     return data[branchId] || 0;
+        // },
     },
 );
 
-export const useTopic = createFetcher<ReadTopicInput, Topic>(
+export const getTopicsByBranchLive = createFetcher<ReadTopicByBranchInput, Topic[]>(
+    async (input) => {
+        // const key = 'topic';
+        // const identifier = await $readTimeStorage(key);
+        // const branchId = input.params.branchId;
+        // const timestampAsString = identifier ? identifier[branchId] : '';
+        //
+        // const { data } = await $readNewTopicsByBranch({
+        //     params: {
+        //         timestamp: String(timestampAsString),
+        //         branchId,
+        //     },
+        // });
+        //
+        // if (!data.data?.length) {
+        //     return;
+        // }
+        //
+        // await $writeTimeStorage(key, {
+        //     [branchId]: Date.now(),
+        // });
+
+        const { data } = await $readTopicsByBranch(input);
+
+        if (!data.data?.length) {
+            return;
+        }
+
+        const mappedData = data.data.map(createTopic);
+
+        return sortByWeight(mappedData);
+    },
+    $useTopicsByBranchStorage,
+    {
+        log: 'getTopicsByBranchLive',
+    },
+);
+
+export const useTopic = createFetcher<ReadTopicByIdInput, Topic>(
     async (input) => {
         const { data } = await $readTopic(input);
+
+        if (!data || !data.data || !data.data[0]) {
+            return;
+        }
+
         const firstItem = data.data[0];
 
         return createTopic(firstItem);
@@ -79,25 +125,28 @@ export const useTopic = createFetcher<ReadTopicInput, Topic>(
     $useTopicStorage,
     {
         log: 'useTopic',
+        useCache: true,
     },
 );
 
-// @todo move to presentation layer
-export function createTopicSlider(topic: Topic) {
-    return {
-        img: {
-            src: topic.image?.url || '',
-            alt: topic.image?.alt || '',
-        },
-        title: topic.name,
-        link: {
-            name: 'topic-id',
-            params: {
-                id: topic.id,
-            },
-        },
-    };
-}
+export const useTopicLive = createFetcher<ReadTopicByIdInput, Topic>(
+    async (input) => {
+        const { data } = await $readTopic(input);
+
+        if (!data || !data.data || !data.data[0]) {
+            return;
+        }
+
+        const firstItem = data.data[0];
+
+        return createTopic(firstItem);
+    },
+    $useTopicStorage,
+    {
+        log: 'useTopicLive',
+        useCache: false,
+    },
+);
 
 export function isTopicFirstDegree(topic: Topic): boolean {
     return topic.degree.label === TopicDegree.one;

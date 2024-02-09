@@ -18,9 +18,9 @@ const Template: StoryFn<typeof VButton> = (args) => ({
     },
     template: `
     <v-button v-bind="args">
-        <v-icon src="/icon/bond.svg" withSpaceRight />
+        <v-icon src="icon/bond.svg" withSpaceRight />
         VButton
-        <v-icon src="/icon/bond.svg" withSpaceLeft modifier="v-text-danger" />
+        <v-icon src="icon/bond.svg" withSpaceLeft modifier="v-text-danger" />
     </v-button>`,
 });
 

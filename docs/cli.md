@@ -17,16 +17,11 @@
 
 ### Building Native Code
 
-- for Android: `npx cap add android`
-- for IOS: `npx cap add ios`
-
 After you do changes to your web app, you need to run
 
-- `npx cap copy <platform>` (native capacitor CLI) (replace platform with android | ios)
+- `npm run sync` . This will clean and completely rebuild the app for native platforms.
 
-In case package.json dependencies have changes, you need to run
-
-- `npx cap sync <platform>`
+If you are preparing a release, you must also update the version numbers in config.yaml before running the sync command.
 
 For more CLI on Capacitor, please visit: [Capacitor CLI](https://capacitorjs.com/docs/cli)
 

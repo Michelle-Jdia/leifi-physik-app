@@ -1,0 +1,17 @@
+# `versionCode` and `buildNumber` are for the stores to determine which build is newer (higher number),
+# as such, use integers and increase by 1 before deploying to the stores.
+# `versionName` and `version` are the version labels shown to users. Must be up-to-date and consistent (semver) for iOS, but is irrelevant for Android.
+platforms:
+    android:
+        versionName: 0.15.0
+        versionCode: 17
+    ios:
+        version: 0.15.0
+        buildNumber: 17
+#    targets:
+#      App:
+#        plist:
+#          - replace: true
+#            file: App/Info.plist
+#            entries:
+#              - ITSAppUsesNonExemptEncryption: false

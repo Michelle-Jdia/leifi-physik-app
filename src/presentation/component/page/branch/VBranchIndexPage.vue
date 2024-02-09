@@ -1,72 +1,78 @@
 <script setup lang="ts">
 import type { SliderItem } from '@/molecule/slider/VTopicBoxSlider/VTopicBoxSlider.vue';
+import type { RefresherCustomEvent } from '@ionic/vue';
+import type { ComputedRef } from 'vue';
 import { onIonViewWillEnter } from '@ionic/vue';
-import { search } from 'ionicons/icons';
-import { useBranches } from '@/store/branchStore';
-import { getTopicsByBranch, createTopicSlider } from '@/store/topicStore';
-import { createReactiveData } from '@/connection/helper/fetcher';
+import { computed } from 'vue';
+import { createRefresherHandler } from '@/connection/helper/refresher';
+import { RouteName } from '@/connection/router/routeName';
+import { useBranchState } from '@/state/branchState';
+import { navigateToSearch } from '@/store/searchStore';
+import { createTopicSlider } from '@/presentation/helper/topic';
 import VBranchHeader from '@/layout/header/VBranchHeader/VBranchHeader.vue';
 import VPage from '@/layout/page/VPage.vue';
+import VGlobalSearchInput from '@/container/form/VGlobalSearchInput/VGlobalSearchInput.vue';
 import VTopicBoxSlider from '@/molecule/slider/VTopicBoxSlider/VTopicBoxSlider.vue';
 import VBranchBox from '@/atom/box/VBranchBox/VBranchBox.vue';
 import VLoader from '@/atom/loader/VLoader/VLoader.vue';
-import VInput from '@/atom/input/VInput/VInput.vue';
+import VRefresher from '@/atom/refresher/VRefresher/VRefresher.vue';
 
 type TopicSliderItem = Record<string, SliderItem[]>;
 
-const { data: branches, getData } = useBranches();
+const branchState = useBranchState();
 
-const { data: sliders, getData: buildSliders } = createReactiveData<never, TopicSliderItem | void>(
-    async () => {
-        await getData();
+const sliders: ComputedRef<TopicSliderItem | void> = computed(() => {
+    if (!branchState.topics) {
+        return;
+    }
 
-        if (!branches.value) {
-            return;
+    return branchState.topics.reduce((sliders: TopicSliderItem, topic) => {
+        if (topic && topic[0]) {
+            const branchId = topic[0].referenced_branch;
+
+            if (!sliders[branchId]) {
+                sliders[branchId] = topic.map(createTopicSlider);
+            }
         }
 
-        const promises = branches.value.map((branch) => {
-            return getTopicsByBranch({
-                params: {
-                    branchId: branch.id,
-                },
-            }).getData();
-        });
+        return sliders;
+    }, {});
+});
 
-        const responses = await Promise.all(promises);
+async function handleRefresh(event: RefresherCustomEvent): Promise<void> {
+    await createRefresherHandler({
+        event: event,
+        callback: async () => {
+            await branchState.getLiveTopicsAndBranches();
+            await branchState.getTopics();
+        },
+    });
+}
 
-        return responses.reduce((sliders: TopicSliderItem, response) => {
-            if (response && response.length) {
-                // @ts-ignore @todo figure out why its complining
-                const branchId = response[0].referenced_branch;
-
-                if (!sliders[branchId]) {
-                    sliders[branchId] = response.map(createTopicSlider);
-                }
-            }
-
-            return sliders;
-        }, {});
-    },
-)();
-
-onIonViewWillEnter(buildSliders);
+onIonViewWillEnter(branchState.getTopics);
 </script>
 
 <template>
     <v-page>
-        <v-loader :logs="['useBranches', 'getTopicsByBranch']" />
+        <v-loader
+            :logs="['useBranches', 'getTopicsByBranch', 'useBranchesLive', 'getTopicsByBranchLive']"
+        />
 
         <template #header>
-            <v-branch-header>Alle Inhalte</v-branch-header>
+            <v-branch-header @on-submit="navigateToSearch">Alle Inhalte</v-branch-header>
         </template>
 
-        <v-input placeholder="Alle Inhalte durchsuchen oder Code eingeben..." :icon="search" />
+        <template #refresher>
+            <v-refresher @ion-refresh="handleRefresh" />
+        </template>
 
-        <h1 class="v-h2 v-mt-box-xl v-font-bold">Teilgebiete der Physik</h1>
+        <v-global-search-input modifier="v-mb-box-xl md:v-hidden" />
+
+        <h1 class="v-h2 v-font-bold">Teilgebiete der Physik</h1>
 
         <div class="v-mt-box-xl v-grid v-grid-cols-2 v-gap-box-md md:v-grid-cols-4">
-            <template v-for="branch in branches" :key="branch.name">
-                <router-link :to="{ name: 'branch-id', params: { id: branch.id } }">
+            <template v-for="branch in branchState.branches" :key="branch.name">
+                <router-link :to="{ name: RouteName.BRANCH_ID, params: { id: branch.id } }">
                     <v-branch-box
                         :img="{
                             src: branch.icon?.url || '',
@@ -80,14 +86,15 @@ onIonViewWillEnter(buildSliders);
         </div>
 
         <v-topic-box-slider
-            v-for="branch in branches"
+            v-for="branch in branchState.branches"
             :key="branch.id"
-            :modifier="'v-mt-box-md v-bg-' + branch.color"
+            :color="branch.color"
+            modifier="v-mt-box-md"
             :branch-img="{
                 src: branch.icon?.url || '',
                 alt: branch.icon?.alt || '',
             }"
-            :link="{ name: 'branch-id', params: { id: branch.id } }"
+            :link="{ name: RouteName.BRANCH_ID, params: { id: branch.id } }"
             :slider-items="(sliders && sliders[branch.id]) || []"
         >
             {{ branch.name }}

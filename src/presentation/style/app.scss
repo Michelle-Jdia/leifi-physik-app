@@ -1,5 +1,3 @@
 @use '@ionic/vue/css/structure.css';
 @use '@/style/shared';
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@use '@/style/layer/base/overwrite';

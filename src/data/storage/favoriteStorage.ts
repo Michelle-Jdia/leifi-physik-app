@@ -1,91 +1,43 @@
-import { createStorageHandler, createStorage } from '@/data/helper/storage';
+import type { Favorite } from '@/data/type/app/favorite';
+import { createStorage } from '@/data/helper/storage';
 
-export type FavoriteStorage = string[];
-
-export type FavoriteTypeKey = 'issue' | 'task';
-
+// @TODO use also type here? uuids have a pretty crazy uniqueness, but still better to identify what we are working with.. no?
 export interface ReadFavoriteInput {
-    params: {
-        id?: string;
-        type: FavoriteTypeKey;
-    };
+    id: string;
 }
 
-const initialState = {
-    issue: [],
-    task: [],
-};
+export const $favoriteStorage = createStorage<Favorite[]>('favorite');
 
-const favoriteStorage = createStorage<{ [key in FavoriteTypeKey]: FavoriteStorage }>('favorite');
+export async function $readFavoriteStorage(input: ReadFavoriteInput): Promise<Favorite | void> {
+    const favoriteId = input.id;
+    const favorites = (await $favoriteStorage.read()) || [];
+    const favorite = favorites.find((favorite) => favorite.id === favoriteId);
 
-export const $useFavoritesStorage = createStorageHandler<ReadFavoriteInput, FavoriteStorage>({
-    async read(input) {
-        const favoriteType = input?.params.type;
+    return favorite;
+}
 
-        if (!favoriteType) {
-            return;
-        }
+export async function $writeFavoriteStorage(data: Favorite): Promise<void> {
+    const favorites = (await $favoriteStorage.read()) || [];
+    const isAlreadyFavoriteIndex = favorites.findIndex((favorite) => favorite.id === data.id);
 
-        const favorites = (await favoriteStorage.read()) || initialState;
+    if (isAlreadyFavoriteIndex !== -1) {
+        return;
+    }
 
-        return favorites[favoriteType];
-    },
+    favorites.unshift(data);
 
-    async write(data, input) {
-        // remove multiple items from storage (used in "Edit" mode of FavoriteIndex)
-        const favoriteType = input?.params.type;
+    return $favoriteStorage.write(favorites);
+}
 
-        if (!favoriteType) {
-            return;
-        }
+export async function $deleteFavoriteStorage(data: Favorite): Promise<void> {
+    const favorites = (await $favoriteStorage.read()) || [];
+    const isAlreadyFavoriteIndex = favorites.findIndex((favorite) => favorite.id === data.id);
 
-        const favorites = (await favoriteStorage.read()) || initialState;
+    if (isAlreadyFavoriteIndex === -1) {
+        return;
+    }
 
-        favorites[favoriteType] = [...favorites[favoriteType], ...data];
+    favorites.splice(isAlreadyFavoriteIndex, 1);
 
-        return favoriteStorage.write(favorites);
-    },
-});
-
-export const $useFavoriteStorage = createStorageHandler<ReadFavoriteInput, string>({
-    async read(input) {
-        // this is basically "isFavorite", so we really only need a true/false return, or return value here and turn into bool in the store
-        const favoriteId = input?.params.id;
-        const favoriteType = input?.params.type;
-
-        if (!favoriteId || !favoriteType) {
-            return;
-        }
-
-        const favorites = (await favoriteStorage.read()) || initialState;
-
-        if (!favorites[favoriteType].includes(favoriteId)) {
-            return;
-        }
-
-        return favoriteId;
-    },
-
-    async write(favoriteId, input) {
-        const favoriteType = input?.params.type;
-
-        if (!input || !favoriteId || !favoriteType) {
-            return;
-        }
-
-        const favorites = (await favoriteStorage.read()) || initialState;
-        const isFavoriteByIdFound = favorites[favoriteType].includes(favoriteId);
-
-        if (!isFavoriteByIdFound) {
-            // case 1: item not a favorite, we add to favorites
-            favorites[favoriteType].push(favoriteId);
-
-            return favoriteStorage.write(favorites);
-        }
-
-        // case 2: this would be the Off part of the On/Off switch. It's already a favorite item, so we remove it from storage
-        favorites[favoriteType] = favorites[favoriteType].filter((id) => id !== favoriteId);
-
-        return favoriteStorage.write(favorites);
-    },
-});
+    return $favoriteStorage.write(favorites);
+}

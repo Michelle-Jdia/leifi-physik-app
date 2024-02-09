@@ -6,6 +6,7 @@ export interface BranchApi {
     status: boolean;
     changed: string | null;
     name: string;
+    weight: number;
     description: TextApi;
     field_branch_headline: string | null;
     field_branch_color: {

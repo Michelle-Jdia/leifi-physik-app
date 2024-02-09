@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/vue3';
+import { ContentType } from '@/data/type/helper/contentType';
 import { articleInfoSlideProps } from '@/molecule/slide/VArticleInfoSlide/VArticleInfoSlide';
 import VArticleInfoSlide from '@/molecule/slide/VArticleInfoSlide/VArticleInfoSlide.vue';
 
@@ -31,9 +32,11 @@ export const Topic = Template.bind({});
 
 Base.args = {
     ...articleInfoSlideProps,
+    type: ContentType.ISSUE,
 };
 
 Topic.args = {
     ...articleInfoSlideProps,
+    type: ContentType.ISSUE,
     isTopic: true,
 };

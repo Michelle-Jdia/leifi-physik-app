@@ -5,20 +5,20 @@ exports[`VArticleInfoSlide > snapshot 1`] = `
   modifier="article-info-slide"
   slidebackground=""
 >
-  <div
-    class="mb-box-sm"
+  <v-badge-stub
+    color="v-bg-yellow-80"
+    modifier="[object Object]"
   >
-    <v-badge-stub
-      color="v-bg-yellow-80"
-      modifier="false"
-    >
-      Mechanik
-    </v-badge-stub>
+    Mechanik
+  </v-badge-stub>
+  <!--v-if-->
+  <v-transition-stub
+    type="slide-right"
+  >
     <!--v-if-->
-    <!--v-if-->
-  </div>
+  </v-transition-stub>
   <div
-    class="v-mt-box"
+    class="v-mt-box-sm"
   >
     <h3
       class="v-text-h4 md:v-text-h3"
@@ -26,7 +26,7 @@ exports[`VArticleInfoSlide > snapshot 1`] = `
       Title
     </h3>
     <span
-      class="v-h5 v-mt-2 v-inline-block v-text-ty-helper"
+      class="v-h5 v-mt-2 v-inline-block v-font-fflight v-text-ty-helper"
     >
       Subtitle
     </span>

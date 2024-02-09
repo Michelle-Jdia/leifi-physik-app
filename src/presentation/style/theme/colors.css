@@ -3,51 +3,75 @@
 }
 
 .v-bg-ci_cyan {
-    background-color: #009fde;
+    background-color: #419fd8;
 }
 
 .v-bg-ci_cyan_20 {
-    background-color: rgb(0 159 222 / 20%);
+    background-color: #d9ecf7;
 }
 
 .v-bg-ci_cyan_50 {
-    background-color: rgb(0 159 222 / 50%);
+    background-color: #a0cfeb;
 }
 
 .v-bg-ci_cyan_80 {
-    background-color: rgb(0 159 222 / 80%);
+    background-color: #67b2e0;
+}
+
+.v-bg-ci_cyan_50-light {
+    background-color: #d9ecf7;
+}
+
+.v-bg-ci_cyan_80-light {
+    background-color: #d9ecf7;
 }
 
 .v-bg-ci_green {
-    background-color: #00ab97;
+    background-color: #48a897;
 }
 
 .v-bg-ci_green_20 {
-    background-color: rgb(0 171 151 / 20%);
+    background-color: #daeeea;
 }
 
 .v-bg-ci_green_50 {
-    background-color: rgb(0 171 151 / 50%);
+    background-color: #a3d3cb;
 }
 
 .v-bg-ci_green_80 {
-    background-color: rgb(0 171 151 / 80%);
+    background-color: #6db9ac;
+}
+
+.v-bg-ci_green_50-light {
+    background-color: #daeeea;
+}
+
+.v-bg-ci_green_80-light {
+    background-color: #daeeea;
 }
 
 .v-bg-ci_yellow {
-    background-color: #ffd633;
+    background-color: #fad657;
 }
 
 .v-bg-ci_yellow_20 {
-    background-color: rgb(255 214 51 / 20%);
+    background-color: #fef7dd;
 }
 
 .v-bg-ci_yellow_50 {
-    background-color: rgb(255 214 51 / 50%);
+    background-color: #fdeaab;
+}
+
+.v-bg-ci_yellow_50-light {
+    background-color: #fef7dd;
+}
+
+.v-bg-ci_yellow_80-light {
+    background-color: #fef7dd;
 }
 
 .v-bg-ci_yellow_80 {
-    background-color: rgb(255 214 51 / 80%);
+    background-color: #fdeaab;
 }
 
 .v-bg-ci_primary {
@@ -67,17 +91,24 @@
 }
 
 .v-bg-ci_magenta {
-    background-color: #e0007b;
+    background-color: #e1007b;
 }
 
 .v-bg-ci_magenta_20 {
-    background-color: rgb(224 0 123 / 20%);
+    background-color: #f7d6e5;
 }
 
 .v-bg-ci_magenta_50 {
-    background-color: rgb(224 0 123 / 50%);
+    background-color: #ec99be;
 }
 
 .v-bg-ci_magenta_80 {
-    background-color: rgb(224 0 123 / 80%);
+    background-color: #e15d97;
+}
+.v-bg-ci_magenta_50-light {
+    background-color: #f7d6e5;
+}
+
+.v-bg-ci_magenta_80-light {
+    background-color: #f7d6e5;
 }

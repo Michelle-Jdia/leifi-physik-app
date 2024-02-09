@@ -30,10 +30,8 @@ For more details, take a look at the related configurations.
 
 - exports must be named (ie. `export const something = ...`)
   - default exports must be used only for Vue components
-- use `const` and avoid `let`
-  - when you feel a `let` is needed, it's time to write a new function
-- use early returns
-  - when you feel an `else` is needed, it's time to write a new function
+- use `const`, avoid `let`
+- use early returns to avoid nested/complex/unreadable if statements
 - separate methods by responsibility
   - a method that _performs something_ is called **action**
   - a method that _reacts to a change_ is called **handler**

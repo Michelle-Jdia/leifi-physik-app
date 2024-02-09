@@ -5,6 +5,10 @@ exports[`VBranchHeader > snapshot 1`] = `
   
   Mechanik
   
-  <!--v-if-->
+  <div
+    class="v-flex v-w-full v-items-center"
+  >
+    <!--v-if-->
+  </div>
 </v-header-stub>
 `;

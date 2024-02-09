@@ -14,6 +14,7 @@ describe('VTopicBoxSlider', () => {
             link: topicBoxSliderProps.link,
             branchImg: topicBoxSliderProps.branchImg,
             sliderItems: [topicBoxSliderProps.sliderItem],
+            color: topicBoxSliderProps.color,
         },
     };
 

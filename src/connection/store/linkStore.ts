@@ -1,14 +1,16 @@
+import type { ReadLinkInput } from '@/data/repository/linkRepository';
 import type { LinkApi } from '@/data/type/api/linkApi';
 import type { Link } from '@/data/type/app/link';
-import type { ReadLinkInput } from '@/data/repository/linkRepository';
-import { $readLinks, $readLink } from '@/data/repository/linkRepository';
-import { $useLinkStorage, $useLinksStorage } from '@/data/storage/linkStorage';
+import { $readLink, $readLinks } from '@/data/repository/linkRepository';
+import { $useLinksStorage, $useLinkStorage } from '@/data/storage/linkStorage';
+import { ContentType } from '@/data/type/helper/contentType';
+import { parseDateStringToTimestamp, parseValueToString } from '@/connection/helper/dataMap';
 import { createFetcher } from '@/connection/helper/fetcher';
-import { parseValueToString, parseDateStringToTimestamp } from '@/connection/helper/dataMap';
 
 function createLink(input: LinkApi): Link {
     return {
         id: parseValueToString(input.id),
+        type: ContentType.LINK,
         changed: parseDateStringToTimestamp(input.changed),
         title: parseValueToString(input.title),
         description: parseValueToString(input.field_link_description),
@@ -25,6 +27,10 @@ export const getLinks = createFetcher<never, Link[]>(
     async () => {
         const { data } = await $readLinks();
 
+        if (!data.data?.length) {
+            return;
+        }
+
         return data.data.map(createLink);
     },
     $useLinksStorage,
@@ -36,6 +42,11 @@ export const getLinks = createFetcher<never, Link[]>(
 export const getLink = createFetcher<ReadLinkInput, Link>(
     async (input) => {
         const { data } = await $readLink(input);
+
+        if (!data || !data.data || !data.data[0]) {
+            return;
+        }
+
         const firstItem = data.data[0];
 
         return createLink(firstItem);

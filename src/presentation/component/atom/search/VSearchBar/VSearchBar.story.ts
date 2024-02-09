@@ -20,3 +20,16 @@ const Template: StoryFn<typeof VSearchBar> = (args) => ({
 });
 
 export const Base = Template.bind({});
+
+export const Purple = Template.bind({});
+
+Base.args = {
+    // @ts-ignore
+    placeholder: 'placeholder',
+};
+
+Purple.args = {
+    // @ts-ignore
+    placeholder: 'placeholder',
+    variant: 'purple',
+};

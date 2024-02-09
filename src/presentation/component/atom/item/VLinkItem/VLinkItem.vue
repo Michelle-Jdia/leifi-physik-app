@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { ClassValue } from 'clsx';
 import { cn } from '@/presentation/helper/style';
-import VIcon from '@/atom/icon/VIcon/VIcon.vue';
+import VTaskIcon from '@/atom/icon/VTaskIcon/VTaskIcon.vue';
 
 interface Props {
+    level?: string;
     modifier?: ClassValue;
 }
 
@@ -19,8 +20,8 @@ defineProps<Props>();
             )
         "
     >
-        <h5 class="v-text-h5 md:v-text-h3"><slot /></h5>
+        <h5 class="v-text-sm md:v-text-h3"><slot /></h5>
 
-        <v-icon with-space-left data-testid="link-icon" size="sm" src="icon/lamp.svg" />
+        <v-task-icon :color="level" src="icon/lamp.svg" with-space-left />
     </div>
 </template>

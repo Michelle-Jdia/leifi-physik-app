@@ -1,74 +1,50 @@
-import type { ReadIssueInput } from '@/data/repository/issueRepository';
+import type { ReadIssueByIdInput, ReadIssuesByTopicInput } from '@/data/repository/issueRepository';
 import type { Issue } from '@/data/type/app/issue';
-import { mergeDeepRight } from 'ramda';
-import { createStorage, createStorageHandler } from '@/data/helper/storage';
+import {
+    createStorage,
+    createStorageHandler,
+    defaultStorageReadMany,
+    defaultStorageReadSingle,
+} from '@/data/helper/storage';
 
 const issueStorage = createStorage<{ [id: string]: Issue }>('issue');
 
-export const $useIssuesStorage = createStorageHandler<ReadIssueInput, Issue[]>({
+export const $useIssuesStorage = createStorageHandler<never, Issue[]>({
     async read() {
-        const issues = (await issueStorage.read()) || {};
-
-        if (!Object.values(issues).length) {
-            return;
-        }
-
-        return Object.values(issues);
+        return defaultStorageReadMany(issueStorage);
     },
 
     async write(data) {
+        if (!data.length) {
+            return;
+        }
+
         const issues = (await issueStorage.read()) || {};
 
         data.forEach((issue) => {
-            if (!issues[issue.id]) {
-                issues[issue.id] = issue;
-            }
-
-            if (issues[issue.id]) {
-                issues[issue.id] = mergeDeepRight(issues[issue.id] || {}, issue);
-            }
+            issues[issue.id] = issue;
         });
 
         return issueStorage.write(issues);
     },
 });
 
-export const $useIssueStorage = createStorageHandler<ReadIssueInput, Issue>({
+export const $useIssueStorage = createStorageHandler<ReadIssueByIdInput, Issue>({
     async read(input) {
-        const issueId = input?.params.id;
-
-        if (!issueId) {
-            return;
-        }
-
-        const issues = (await issueStorage.read()) || {};
-
-        return issues[issueId];
+        return defaultStorageReadSingle(issueStorage, input);
     },
 
     async write(data) {
         const issues = (await issueStorage.read()) || {};
         const issueId = data.id;
 
-        if (!Object.keys(issues).length) {
-            return issueStorage.write({
-                [issueId]: data,
-            });
-        }
-
-        if (!issues[issueId]) {
-            issues[issueId] = data;
-
-            return issueStorage.write(issues);
-        }
-
-        issues[issueId] = mergeDeepRight(issues[issueId] || {}, data);
+        issues[issueId] = data;
 
         return issueStorage.write(issues);
     },
 });
 
-export const $useIssuesByTopicStorage = createStorageHandler<ReadIssueInput, Issue[]>({
+export const $useIssuesByTopicStorage = createStorageHandler<ReadIssuesByTopicInput, Issue[]>({
     async read(input) {
         const topicID = input?.params.topicId;
 
@@ -78,8 +54,12 @@ export const $useIssuesByTopicStorage = createStorageHandler<ReadIssueInput, Iss
 
         const issues = (await issueStorage.read()) || {};
 
+        if (!Object.values(issues).length) {
+            return;
+        }
+
         const issuesByTopic = Object.values(issues).filter(
-            (issue) => issue.referenced_topic === input?.params.topicId,
+            (issue) => issue.referenced_topic === topicID,
         );
 
         if (!issuesByTopic.length) {
@@ -90,16 +70,14 @@ export const $useIssuesByTopicStorage = createStorageHandler<ReadIssueInput, Iss
     },
 
     async write(data) {
+        if (!data.length) {
+            return;
+        }
+
         const issues = (await issueStorage.read()) || {};
 
         data.forEach((issue) => {
-            if (!issues[issue.id]) {
-                issues[issue.id] = issue;
-            }
-
-            if (issues[issue.id]) {
-                issues[issue.id] = mergeDeepRight(issues[issue.id] || {}, issue);
-            }
+            issues[issue.id] = issue;
         });
 
         return issueStorage.write(issues);

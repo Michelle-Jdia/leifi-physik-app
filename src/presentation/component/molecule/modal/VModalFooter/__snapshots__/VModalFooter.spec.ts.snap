@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VModalFooter > snapshot 1`] = `
+<div
+  class="modal-footer"
+>
+  <!--v-if-->
+  <div
+    class="v-flex v-border-t v-border-gray-50 v-bg-white v-p-box-xl"
+  >
+    
+    Mechanik
+    
+  </div>
+</div>
+`;

@@ -9,6 +9,7 @@ describe('VArticleEditItem', () => {
     const options = {
         props: {
             id: '1',
+            type: 'issue',
             title: branch.title,
             subtitle: topic.subtitle,
         },

@@ -2,7 +2,7 @@
 
 exports[`VTopicImageBox > snapshot 1`] = `
 <div
-  class="topic-image-box v-relative v-grayscale"
+  class="topic-image-box v-relative"
 >
   <anonymous-stub
     alt="mechanic"
@@ -13,12 +13,12 @@ exports[`VTopicImageBox > snapshot 1`] = `
     routerlink="Symbol()"
     src="/image/category/mechanic/mechanic.svg"
   />
+  <div
+    class="v-absolute v-left-0 v-top-0 v-h-[9rem] v-w-full v-bg-gradient-to-t v-from-white/[.8] v-from-40% v-content-[''] md:v-h-[11rem]"
+  />
   <h4
-    class="v-h4 v-absolute v-bottom-0 v-left-0 v-w-full v-hyphens-auto v-bg-white v-px-box v-pb-box v-text-left v-font-bold"
+    class="v-h4 v-absolute v-bottom-0 v-left-0 v-w-full v-hyphens-auto v-px-box v-pb-box v-text-left v-font-bold"
   >
-    <div
-      class="v-absolute v-left-0 v-top-0 v-h-[9rem] v-w-full v--translate-y-full v-bg-gradient-to-t v-from-white v-content-['']"
-    />
     
     Mechanik
     

@@ -1,0 +1,58 @@
+ion-searchbar.search-bar {
+    --border-radius: theme(borderRadius.sm);
+    --box-shadow: theme(boxShadow.none);
+
+    .searchbar-input-container {
+        @apply v-flex v-h-full v-items-center;
+    }
+
+    input {
+        @apply v-h-[2.5rem] v-text-sm md:v-text-copy #{!important};
+
+        &:focus {
+            @apply v-bg-white v-shadow-md;
+        }
+    }
+
+    &.variant-default {
+        --background: theme(backgroundColor.gray.20);
+
+        input {
+            @apply v-border v-border-solid v-border-primary;
+
+            &:focus {
+                // stylelint-disable-next-line
+                + ion-icon {
+                    @apply v-text-black v-opacity-100;
+                }
+            }
+        }
+    }
+
+    &.variant-purple {
+        button {
+            @apply v-text-white;
+        }
+
+        // stylelint-disable-next-line
+        input {
+            @apply v-bg-purple-50 v-text-white #{!important};
+
+            &:focus {
+                @apply v-text-black #{!important};
+
+                // stylelint-disable-next-line
+                ~ button,
+                ~ ion-icon {
+                    @apply v-text-ty-headline v-opacity-100 #{!important};
+                }
+            }
+        }
+    }
+
+    .searchbar-cancel-button {
+        .sc-ion-searchbar-ios {
+            @apply v-underline;
+        }
+    }
+}

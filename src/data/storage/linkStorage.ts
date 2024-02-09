@@ -1,6 +1,5 @@
 import type { ReadLinkInput } from '@/data/repository/linkRepository';
 import type { Link } from '@/data/type/app/link';
-import { mergeDeepRight } from 'ramda';
 import { createStorage, createStorageHandler } from '@/data/helper/storage';
 
 /**
@@ -28,13 +27,7 @@ export const $useLinksStorage = createStorageHandler<ReadLinkInput, Link[]>({
         }
 
         data.forEach((link) => {
-            if (!links[link.id]) {
-                links[link.id] = link;
-            }
-
-            if (links[link.id]) {
-                links[link.id] = mergeDeepRight(links[link.id] || {}, link);
-            }
+            links[link.id] = link;
         });
 
         linkStorage.write(links);
@@ -59,7 +52,7 @@ export const $useLinkStorage = createStorageHandler<ReadLinkInput, Link>({
     },
 
     async write(data) {
-        const links = await linkStorage.read();
+        const links = (await linkStorage.read()) || {};
 
         if (!data) {
             return;
@@ -67,22 +60,8 @@ export const $useLinkStorage = createStorageHandler<ReadLinkInput, Link>({
 
         const linkId = data.id;
 
-        if (!links) {
-            linkStorage.write({
-                [linkId]: data,
-            });
+        links[linkId] = data;
 
-            return;
-        }
-
-        if (!links[linkId]) {
-            links[linkId] = data;
-            linkStorage.write(links);
-
-            return;
-        }
-
-        links[linkId] = mergeDeepRight(links[linkId] || {}, data);
         linkStorage.write(links);
     },
 });
