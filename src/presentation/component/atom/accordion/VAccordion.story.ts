@@ -1,4 +1,5 @@
 import type { Meta, StoryFn } from '@storybook/vue3';
+import { chevronDown } from 'ionicons/icons';
 import VAccordion from '@/atom/accordion/VAccordion.vue';
 
 export default {
@@ -16,8 +17,8 @@ const Template: StoryFn<typeof VAccordion> = (args) => ({
     },
     template: `
         <v-accordion v-bind="args" label="First Accordion">
-          <template #accordion-label>
-            <h3 class="!v-text-h3 v-text-primary v-underline">label</h3>
+          <template #label>
+            label
           </template>
           
             Content
@@ -27,4 +28,10 @@ const Template: StoryFn<typeof VAccordion> = (args) => ({
 
 export const Base = Template.bind({});
 
+export const WithIcon = Template.bind({});
+
 Base.args = {};
+
+WithIcon.args = {
+    toggleIcon: chevronDown,
+};

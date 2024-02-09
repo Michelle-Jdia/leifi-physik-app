@@ -15,5 +15,35 @@ ion-label,
 ion-item {
     padding: 0;
     margin: 0;
-    white-space: pre-wrap !important;
+    white-space: inherit !important;
+}
+
+ion-popover {
+    &::part(content) {
+        @apply v-w-max v-rounded-lg;
+    }
+
+    ion-radio-group {
+        ion-item {
+            @apply v-px-box-lg v-py-box;
+
+            &:not(:last-of-type) {
+                @apply v-border-b v-border-gray;
+            }
+        }
+
+        ion-radio {
+            --color-checked: var(--ion-color-black);
+
+            @apply v-order-first v-m-0 v-mr-icon;
+        }
+    }
+
+    ion-item::part(native) {
+        --inner-padding-end: 0;
+        --background: transparent;
+        --inner-border-width: 0;
+        --background-focused: transparent;
+        --background-hover: transparent;
+    }
 }

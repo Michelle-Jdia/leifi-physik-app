@@ -1,8 +1,8 @@
 import type { Meta, StoryFn } from '@storybook/vue3';
 import { branch } from '@/presentation/static/branch';
 import { topic } from '@/presentation/static/topic';
-import VBadge from '@/atom/badge/VBadge/VBadge.vue';
 import VArticleBox from '@/molecule/box/VArticleBox/VArticleBox.vue';
+import VBadge from '@/atom/badge/VBadge/VBadge.vue';
 
 export default {
     component: VArticleBox,

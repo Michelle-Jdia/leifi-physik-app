@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/vue3';
-import VNotification from '@/molecule/notification/VNotification.vue';
 import { topic } from '@/presentation/static/topic';
+import VNotification from '@/molecule/notification/VNotification.vue';
 
 export default {
     component: VNotification,

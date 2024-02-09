@@ -1,25 +1,22 @@
 <script setup lang="ts">
-import { IonList, IonItem, IonLabel } from '@ionic/vue';
+import { IonItem, IonLabel, IonList } from '@ionic/vue';
+import { chevronForwardOutline } from 'ionicons/icons';
+import { RouteName } from '@/connection/router/routeName';
 import VHeader from '@/layout/header/VHeader.vue';
 import VPage from '@/layout/page/VPage.vue';
-import { chevronForwardOutline } from 'ionicons/icons';
 import VIcon from '@/atom/icon/VIcon/VIcon.vue';
 
 const listItems = [
     {
-        name: 'local-storage',
+        name: RouteName.LOCAL_STORAGE,
         label: 'Lokalen Daten',
     },
     {
-        name: 'data-usage',
-        label: 'Datennutzung',
-    },
-    {
-        name: 'data-protection',
+        name: RouteName.DATA_PROTECTION,
         label: 'Datenschutz',
     },
     {
-        name: 'imprint',
+        name: RouteName.IMPRINT,
         label: 'Impressum',
     },
 ];

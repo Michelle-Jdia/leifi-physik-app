@@ -1,0 +1,13 @@
+ion-input {
+    .input-clear-icon {
+        @apply v-absolute v-right-[0] v-mr-box-sm #{!important};
+    }
+
+    input {
+        @apply v-border v-border-solid v-border-transparent #{!important};
+
+        &:focus {
+            @apply v-border v-border-purple v-bg-white v-shadow-md #{!important};
+        }
+    }
+}

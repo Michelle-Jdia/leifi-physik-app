@@ -5,19 +5,16 @@ exports[`VLinkItem > snapshot 1`] = `
   class="link-item v-flex v-items-center v-justify-between v-rounded-sm v-border v-border-gray-20 v-bg-white v-p-box v-shadow"
 >
   <h5
-    class="v-text-h5 md:v-text-h3"
+    class="v-text-sm md:v-text-h3"
   >
     
     Mechanik
     
   </h5>
-  <v-icon-stub
-    data-testid="link-icon"
+  <v-task-icon-stub
     modifier="false"
-    size="sm"
     src="icon/lamp.svg"
-    withspaceleft="true"
-    withspaceright="false"
+    with-space-left=""
   />
 </div>
 `;

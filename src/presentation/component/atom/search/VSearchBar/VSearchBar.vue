@@ -1,16 +1,53 @@
 <script setup lang="ts">
 import type { ClassValue } from 'clsx';
-import { cn } from '@/presentation/helper/style';
+import type { ComputedRef } from 'vue/dist/vue';
 import { IonSearchbar } from '@ionic/vue';
-import { search } from 'ionicons/icons';
+import { computed, ref } from 'vue';
+import { cn } from '@/presentation/helper/style';
 
 interface Props {
+    variant?: 'default' | 'purple';
     modifier?: ClassValue;
 }
 
-defineProps<Props>();
+const emit = defineEmits<{
+    (e: 'onSubmit', { value }: { value: string }): void;
+}>();
+
+const props = defineProps<Props>();
+const model = ref('');
+
+function handleKeyPress(event: KeyboardEvent) {
+    const target = event.target as HTMLInputElement;
+    const matchTwoSpacesOrMore = / {2,}/g;
+
+    target.value = target.value.replace(matchTwoSpacesOrMore, ' ');
+}
+
+function handleEnterPress() {
+    emit('onSubmit', {
+        value: model.value,
+    });
+}
+
+const variantClass: ComputedRef<string> = computed(() => {
+    if (props.variant === 'purple') {
+        return 'variant-purple';
+    }
+
+    return 'variant-default';
+});
 </script>
 
 <template>
-    <ion-searchbar :class="cn('search-bar v-bg-gray-20', modifier)" :search-icon="search" />
+    <ion-searchbar
+        v-model.trim="model"
+        :maxlength="255"
+        :minlength="1"
+        show-cancel-button="focus"
+        cancel-button-text="Abbrechen"
+        :class="cn('search-bar !v-text-sm !md:v-text-copy !v-p-0 ', variantClass, modifier)"
+        @keydown="handleKeyPress"
+        @keydown.enter="handleEnterPress"
+    />
 </template>

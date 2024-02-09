@@ -1,0 +1,5 @@
+ion-toast {
+    &.toast::part(button) {
+        text-decoration: underline;
+    }
+}

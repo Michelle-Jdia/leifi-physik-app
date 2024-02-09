@@ -5,22 +5,26 @@
  */
 
 /* eslint-disable */
-export const getMathjax = async () => {
-    // @ts-ignore
-    await import('@/presentation/script/mathjax@3/mathjax-config.js');
-
-    // @ts-ignore
-    await import('mathjax/es5/tex-mml-svg.js');
-
-    // @ts-ignore
-    import('mathjax/es5/input/tex/extensions/enclose.js');
-
-    // @ts-ignore
-    import('mathjax/es5/input/tex/extensions/cancel.js');
-
-    // @ts-ignore
-    import('mathjax/es5/input/tex/extensions/color.js');
-
-    // @ts-ignore
-    import('mathjax/es5/input/tex/extensions/mhchem.js');
-};
+// This is no longer in use. See public/script/mathjax
+// export const getMathjax = async () => {
+//     // @ts-ignore
+//     await import('/public/script/mathjax/mathjax-config.js');
+//
+//     // @ts-ignore
+//     await import('/public/script/mathjax/tex-mml-chtml.js');
+//
+//     // @ts-ignore
+//     import('/public/script/mathjax/input/tex/extensions/enclose.js');
+//
+//     // @ts-ignore
+//     import('/public/script/mathjax/input/tex/extensions/cancel.js');
+//
+//     // @ts-ignore
+//     import('/public/script/mathjax/input/tex/extensions/color.js');
+//
+//     // @ts-ignore
+//     // import('/public/script/mathjax/input/tex/extensions/colorv2.js');
+//
+//     // @ts-ignore
+//     import('/public/script/mathjax/input/tex/extensions/mhchem.js');
+// };

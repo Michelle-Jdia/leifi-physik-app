@@ -1,96 +1,228 @@
 <script setup lang="ts">
+import type { Collection } from '@/data/type/app/collection';
+import type { Download } from '@/data/type/app/download';
 import type { Issue } from '@/data/type/app/issue';
-import { onIonViewWillEnter, IonIcon } from '@ionic/vue';
+import type { Task } from '@/data/type/app/task';
+import type { IonModal } from '@ionic/vue';
+import type { Ref } from 'vue';
+import { onIonViewWillEnter } from '@ionic/vue';
 import { bookmarkOutline } from 'ionicons/icons';
-import { createReactiveData } from '@/connection/helper/fetcher';
-import { useIssue } from '@/store/issueStore';
-import { setFavoriteIssue, useFavoriteIssues } from '@/store/favoriteStore';
-import VPage from '@/layout/page/VPage.vue';
+import { ref, watch } from 'vue';
+import { $t } from '@/application/translation';
+import { closeModal, openModal } from '@/connection/helper/modal';
+import { useArticleState } from '@/state/articleState';
+import { useFavoriteState } from '@/state/favoriteState';
+import { getBorder } from '@/presentation/helper/style';
 import VFavoriteHeader from '@/layout/header/VFavoriteHeader.vue';
+import VPage from '@/layout/page/VPage.vue';
+import VArticleItemList from '@/container/list/VArticleItemList/VArticleItemList.vue';
+import VFavoriteWrapper from '@/container/wrapper/VFavoriteWrapper/VFavoriteWrapper.vue';
+import VInputButton from '@/molecule/form/VInputButton/VInputButton.vue';
+import VModalFooter from '@/molecule/modal/VModalFooter/VModalFooter.vue';
 import VArticleInfoSlide from '@/molecule/slide/VArticleInfoSlide/VArticleInfoSlide.vue';
+import VButton from '@/atom/button/VButton/VButton.vue';
+import VCheckbox from '@/atom/checkbox/VCheckbox/VCheckbox.vue';
+import VIcon from '@/atom/icon/VIcon/VIcon.vue';
 import VLoader from '@/atom/loader/VLoader/VLoader.vue';
+import VModal from '@/atom/modal/VModal/VModal.vue';
 
-const { data: favorites, getData: getFavoriteIssues } = useFavoriteIssues();
+type IonModalInstance = InstanceType<typeof IonModal>;
+const editModeModal: Ref<IonModalInstance | undefined> = ref();
+const addToCollectionsModal: Ref<IonModalInstance | null> = ref(null);
+const createCollectionModal: Ref<IonModalInstance | null> = ref(null);
+const tempCollectionsToUpdate: Collection[] = [];
+const favoriteState = useFavoriteState();
+const articleState = useArticleState();
 
-const { data: favoriteItems, getData: buildFavorites } = createReactiveData<never, Issue[] | void>(
-    async () => {
-        await getFavoriteIssues();
-
-        if (!favorites.value) {
-            return [];
-        }
-
-        const promises = favorites.value.map((issueId) => {
-            return useIssue({
-                params: {
-                    id: issueId,
-                },
-            }).getData();
-        });
-
-        const responses = await Promise.all(promises);
-
-        return responses.reduce((issueSlide: Issue[], response) => {
-            if (response) {
-                issueSlide.push(response);
-            }
-
-            return issueSlide;
-        }, []);
-    },
-)();
-
-function getBorderClasses(index: number): string {
-    if (!index) {
-        return 'v-border-b v-border-t';
+function toggleArticleInTempList(event: CustomEvent, item: Collection): void {
+    if (event.detail.checked === true) {
+        tempCollectionsToUpdate.push(item);
     }
 
-    return 'v-border-b';
+    if (event.detail.checked === false) {
+        const filtered = tempCollectionsToUpdate.filter(
+            (collection) => !(collection.id === item.id && collection.type === item.type),
+        );
+
+        tempCollectionsToUpdate.length = 0;
+        tempCollectionsToUpdate.push(...filtered);
+    }
 }
 
-async function updateFavorite(id: string, closeSlide: () => void): Promise<void> {
-    await setFavoriteIssue(id);
-    getFavoriteIssues();
-    closeSlide();
+// @TODO can we even make any of this addcollection html/logic reusable?
+async function handleAddToCollectionModal(): Promise<void> {
+    const articles: Ref<(Issue | Task | Download)[]> = ref([]);
+
+    for (const favorite of favoriteState.checkedFavorites) {
+        const item = await articleState.loadArticleByType(favorite.type, favorite.id);
+
+        if (!item) {
+            continue;
+        }
+
+        articles.value.push(item);
+    }
+
+    await articleState.saveArticlesToCollections(articles.value, tempCollectionsToUpdate);
+
+    closeModal(addToCollectionsModal.value);
 }
 
-// @TODO: how to show favorite tasks??
-onIonViewWillEnter(buildFavorites);
+async function handleCreateCollectionSubmit({ value }: { value: string }): Promise<void> {
+    const articles: Ref<(Issue | Task | Download)[]> = ref([]);
+
+    for (const favorite of favoriteState.checkedFavorites) {
+        const item = await articleState.loadArticleByType(favorite.type, favorite.id);
+
+        if (!item) {
+            continue;
+        }
+
+        articles.value.push(item);
+    }
+
+    await articleState.createAndAddArticleToNewCollection(articles.value, value);
+    closeModal(createCollectionModal.value);
+}
+
+const unwatch = watch(editModeModal, (value) => {
+    if (!value) {
+        return;
+    }
+
+    favoriteState.setModal(editModeModal.value);
+
+    unwatch();
+});
+
+onIonViewWillEnter(() => {
+    favoriteState.getFavorites();
+    articleState.getCollections();
+});
 </script>
 
 <template>
     <v-page modifier="v-px-0 md:v-px-0">
         <template #header>
-            <v-favorite-header>Favoriten</v-favorite-header>
+            <v-favorite-header
+                :with-edit-mode="favoriteState.hasFavorites"
+                @on-open-edit-modal="openModal(editModeModal)"
+            >
+                {{ $t.favorite.title }}
+            </v-favorite-header>
         </template>
 
         <v-loader :logs="['useIssue', 'useTopic', 'useBranch']" />
 
-        <template v-if="favoriteItems && favoriteItems.length">
-            <div v-for="(favoriteItem, index) in favoriteItems" :key="favoriteItem.id">
-                <router-link
-                    v-if="favoriteItem"
-                    :to="{ name: 'issue-id', params: { id: favoriteItem.id } }"
-                >
-                    <v-article-info-slide
-                        :id="favoriteItem.id"
-                        :title="favoriteItem.title"
-                        :sub-title="favoriteItem.issue_category"
-                        :branch="{ title: 'test', color: 'ci_yellow_80' }"
-                        :modifier="`${getBorderClasses(index)} v-border-gray-50`"
-                        :is-favorite="favorites?.includes(favoriteItem.id)"
-                        @on-favorite="updateFavorite"
-                    />
-                </router-link>
+        <div v-if="favoriteState.hasFavorites">
+            <div v-for="(favorite, index) in favoriteState.favorites" :key="favorite.id">
+                <v-favorite-wrapper :id="favorite.id" :type="favorite.type">
+                    <template
+                        #default="{ title, subtitle, branch, handleFavorite, isFavorite, link }"
+                    >
+                        <router-link
+                            :to="link"
+                            :class="`v-block ${getBorder(index)} v-border-gray-50`"
+                        >
+                            <v-article-info-slide
+                                :id="favorite.id"
+                                :type="favorite.type"
+                                :title="title"
+                                :subtitle="subtitle"
+                                :branch="branch"
+                                :is-favorite="isFavorite"
+                                @on-favorite="handleFavorite"
+                            />
+                        </router-link>
+                    </template>
+                </v-favorite-wrapper>
             </div>
-        </template>
+        </div>
 
-        <template v-else>
-            <h3 class="v-text-h v-p-box">
-                Wusstest Du es schon? Hier kannst Du Inhalte auf einer Favoriten-Liste ablegen.
-                Klicke dazu einfach auf das <ion-icon :icon="bookmarkOutline" /> symbol dort wo du
-                es in der app siehst.
-            </h3>
-        </template>
+        <div v-else class="v-p v-px-box-xl md:v-px-section">
+            <h3>Wusstest du schon? Hier kannst du Inhalte zu einer Favoriten-Liste hinzufügen.</h3>
+
+            <div class="v-mt-box">
+                Klicke dazu einfach auf das
+                <v-icon :icon="bookmarkOutline" with-space-left with-space-right /> Symbol dort wo
+                du es in der App siehst.
+            </div>
+        </div>
+
+        <v-modal
+            v-if="favoriteState.hasFavorites"
+            ref="editModeModal"
+            with-save
+            @on-confirm="favoriteState.updateFavorites"
+        >
+            <template #title>Favoriten bearbeiten</template>
+
+            <v-article-item-list
+                v-if="favoriteState.favorites"
+                :key="favoriteState.favoriteKey"
+                :items="favoriteState.favorites"
+                @on-reorder="favoriteState.updateFavoritesOrder"
+                @on-check="favoriteState.updateCheckedFavorites"
+                @on-delete="favoriteState.removeFavoriteItem"
+            />
+
+            <template #footer>
+                <v-modal-footer v-if="favoriteState.checkedFavorites.length">
+                    <v-button
+                        modifier="v-w-full"
+                        color="tertiary"
+                        size="small"
+                        @click="favoriteState.openConfirmationSheet"
+                    >
+                        Entfernen
+                    </v-button>
+
+                    <v-button
+                        modifier="v-w-full v-ml-box-md"
+                        size="small"
+                        color="tertiary"
+                        @click="openModal(addToCollectionsModal)"
+                    >
+                        In Sammlung
+                    </v-button>
+                </v-modal-footer>
+            </template>
+        </v-modal>
+
+        <v-modal ref="addToCollectionsModal" with-save @on-confirm="handleAddToCollectionModal">
+            <template #title>{{ $t.collection.addCollection }}</template>
+
+            <v-button modifier="v-mb-box-md v-w-full" @click="openModal(createCollectionModal)">
+                <v-icon src="icon/add-collection.svg" with-space-right />
+
+                {{ $t.collection.createCollection }}
+            </v-button>
+
+            <template v-if="articleState.collections && articleState.collections.length">
+                <div v-for="collection in articleState.collections" :key="collection.id">
+                    <div
+                        :class="'v-flex v-items-center v-rounded v-border v-border-gray-20 v-bg-white v-p-box v-mb-box-md'"
+                    >
+                        <v-checkbox
+                            modifier="v-mr-auto v-w-full v-h3 v-font-bold"
+                            @ion-change="(event) => toggleArticleInTempList(event, collection)"
+                        >
+                            {{ collection.private_title }}
+                        </v-checkbox>
+                    </div>
+                </div>
+            </template>
+        </v-modal>
+
+        <v-modal ref="createCollectionModal">
+            <template #title>{{ $t.collection.addCollection }}</template>
+
+            <v-input-button
+                icon="icon/add-collection.svg"
+                :button-text="$t.collection.create"
+                :placeholder="$t.collection.collectionName"
+                @on-submit="handleCreateCollectionSubmit"
+            />
+        </v-modal>
     </v-page>
 </template>

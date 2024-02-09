@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { ClassValue } from 'clsx';
-import { ref } from 'vue';
+import type { Ref } from 'vue';
 import { IonItem, IonItemOptions, IonItemSliding } from '@ionic/vue';
+import { ref } from 'vue';
 import { cn } from '@/presentation/helper/style';
 
 interface Props {
@@ -12,11 +13,10 @@ interface Props {
 defineProps<Props>();
 
 const defaultBackground = 'v-bg-white';
-const item = ref(null);
+const item: Ref<InstanceType<typeof IonItemSliding> | null> = ref(null);
 
 function closeSlide() {
-    // @ts-ignore nothing to do here
-    item.value.$el.close();
+    item.value?.$el.close();
 }
 </script>
 
@@ -27,10 +27,18 @@ function closeSlide() {
             :class="cn('v-px-box-xl v-py-box-md md:v-px-section-md', defaultBackground, modifier)"
         >
             <div class="v-w-full v-text-ty-headline">
-                <slot />
-            </div>
+                <div class="v-flex v-items-center v-justify-between">
+                    <div>
+                        <slot />
+                    </div>
 
-            <slot name="end" />
+                    <slot name="end" />
+                </div>
+
+                <div v-if="$slots.after" class="v-mt-box">
+                    <slot name="after" />
+                </div>
+            </div>
         </ion-item>
 
         <ion-item-options>

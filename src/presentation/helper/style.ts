@@ -5,7 +5,17 @@ import { extendTailwindMerge } from 'tailwind-merge';
 const customTwMerge = extendTailwindMerge({
     prefix: 'v-',
     theme: {
-        spacing: ['box-xs', 'box-sm', 'box', 'box-md', 'box-lg', 'section', 'section-md'],
+        spacing: [
+            'box-xs',
+            'box-sm',
+            'box',
+            'box-md',
+            'box-lg',
+            'box-xl',
+            'section',
+            'section-md',
+            'section-lg',
+        ],
     },
     classGroups: {
         'font-size': [
@@ -24,6 +34,8 @@ const customTwMerge = extendTailwindMerge({
                     'copy-xs',
                     'copy',
                     'copy-tablet',
+                    'label',
+                    'sm',
                 ],
             },
         ],
@@ -33,4 +45,12 @@ const customTwMerge = extendTailwindMerge({
 
 export function cn(...inputs: ClassValue[]): ClassValue {
     return customTwMerge(clsx(inputs));
+}
+
+export function getBorder(index: number) {
+    if (!index) {
+        return 'v-border-b v-border-t';
+    }
+
+    return 'v-border-b';
 }

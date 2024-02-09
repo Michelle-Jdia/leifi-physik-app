@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import type { ComputedRef } from 'vue';
 import type { SliderItem } from '@/molecule/slider/VTopicBoxSlider/VTopicBoxSlider.vue';
+import type { RefresherCustomEvent } from '@ionic/vue';
+import type { ComputedRef } from 'vue';
 import { computed } from 'vue';
+import { createRefresherHandler } from '@/connection/helper/refresher';
 import { useBranch } from '@/store/branchStore';
+import { navigateToSearch } from '@/store/searchStore';
 import {
-    TopicDegree,
-    getTopicsByBranch,
-    createTopicSlider,
+    getTopicsByBranchLive,
     isTopicFirstDegree,
     isTopicSecondDegree,
     isTopicThirdDegree,
+    TopicDegree,
+    useTopicsByBranch,
 } from '@/store/topicStore';
-import VPage from '@/layout/page/VPage.vue';
+import { createTopicSlider } from '@/presentation/helper/topic';
 import VBranchHeader from '@/layout/header/VBranchHeader/VBranchHeader.vue';
+import VPage from '@/layout/page/VPage.vue';
 import VTopicBoxSlider from '@/molecule/slider/VTopicBoxSlider/VTopicBoxSlider.vue';
 import VLoader from '@/atom/loader/VLoader/VLoader.vue';
+import VRefresher from '@/atom/refresher/VRefresher/VRefresher.vue';
 
 interface Props {
     id: string;
@@ -32,7 +37,13 @@ const { data: branch, getData: getBranch } = useBranch({
     },
 });
 
-const { data: topics, getData: getTopics } = getTopicsByBranch({
+const { data: topics, getData: getTopics } = useTopicsByBranch({
+    params: {
+        branchId: props.id,
+    },
+});
+
+const { getData: getLiveTopics } = getTopicsByBranchLive({
     params: {
         branchId: props.id,
     },
@@ -54,6 +65,31 @@ const sliders: ComputedRef<TopicSliderItem | void> = computed(() => {
     };
 });
 
+function getTopicHeadline(key: string): TopicDegree | void {
+    if (key === 'levelOne') {
+        return TopicDegree.one;
+    }
+
+    if (key === 'levelTwo') {
+        return TopicDegree.two;
+    }
+
+    if (key === 'levelThree') {
+        return TopicDegree.three;
+    }
+}
+
+async function handleRefresh(event: RefresherCustomEvent): Promise<void> {
+    await createRefresherHandler({
+        event: event,
+        callback: async () => {
+            await getLiveTopics();
+            await getBranch();
+            await getTopics();
+        },
+    });
+}
+
 getBranch();
 getTopics();
 </script>
@@ -62,60 +98,40 @@ getTopics();
     <v-page>
         <v-loader :logs="['useBranch', 'getTopicsByBranch']" />
 
-        <template v-if="branch" #header>
-            <v-branch-header>
-                {{ branch.name }}
+        <template #header>
+            <v-branch-header @on-submit="navigateToSearch">
+                <template v-if="branch">
+                    {{ branch.name }}
+                </template>
 
                 <template #sub-title>Teilgebiete</template>
             </v-branch-header>
         </template>
 
-        <div v-if="sliders?.levelOne && sliders.levelOne.length && branch" class="v-mb-section">
-            <h2 class="v-h2">{{ TopicDegree.one }}</h2>
+        <template #refresher>
+            <v-refresher @ion-refresh="handleRefresh" />
+        </template>
 
-            <v-topic-box-slider
-                :key="branch.id"
-                :modifier="'v-mt-box-md v-bg-' + branch.color"
-                :branch-img="{
-                    src: branch.icon?.url || '',
-                    alt: branch.icon?.alt || '',
-                }"
-                :slider-items="sliders.levelOne"
-            >
-                {{ themeTitle }}
-            </v-topic-box-slider>
-        </div>
+        <template v-if="sliders && branch">
+            <template v-for="key in Object.keys(sliders)" :key="key">
+                <div v-if="sliders[key] && sliders[key]?.length" class="v-mb-section">
+                    <h2 class="v-h2">{{ getTopicHeadline(key) }}</h2>
 
-        <div v-if="sliders?.levelTwo && sliders.levelTwo.length && branch" class="v-mb-section">
-            <h2 class="v-h2">{{ TopicDegree.two }}</h2>
-
-            <v-topic-box-slider
-                :key="branch.id"
-                :modifier="'v-mt-box-md v-bg-' + branch.color"
-                :branch-img="{
-                    src: branch.icon?.url || '',
-                    alt: branch.icon?.alt || '',
-                }"
-                :slider-items="sliders.levelTwo"
-            >
-                {{ themeTitle }}
-            </v-topic-box-slider>
-        </div>
-
-        <div v-if="sliders?.levelThree && sliders.levelThree.length && branch">
-            <h2 class="v-h2">{{ TopicDegree.three }}</h2>
-
-            <v-topic-box-slider
-                :key="branch.id"
-                :modifier="'v-mt-box-md v-bg-' + branch.color"
-                :branch-img="{
-                    src: branch.icon?.url || '',
-                    alt: branch.icon?.alt || '',
-                }"
-                :slider-items="sliders.levelThree"
-            >
-                {{ themeTitle }}
-            </v-topic-box-slider>
-        </div>
+                    <v-topic-box-slider
+                        v-if="sliders[key]"
+                        :key="branch.id"
+                        modifier="v-mt-box-md"
+                        :color="branch.color"
+                        :branch-img="{
+                            src: branch.icon?.url || '',
+                            alt: branch.icon?.alt || '',
+                        }"
+                        :slider-items="sliders[key] || []"
+                    >
+                        {{ themeTitle }}
+                    </v-topic-box-slider>
+                </div>
+            </template>
+        </template>
     </v-page>
 </template>

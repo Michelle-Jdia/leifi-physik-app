@@ -4,23 +4,24 @@ import VHeader from '@/layout/header/VHeader.vue';
 import VButton from '@/atom/button/VButton/VButton.vue';
 import VIcon from '@/atom/icon/VIcon/VIcon.vue';
 
-// interface Props {
-//     id: string;
-//     type: FavoriteTypeKey;
-//     isCollection?: boolean;
-// }
-// const props = defineProps<Props>();
+interface Props {
+    withEditMode: boolean;
+}
+
+defineProps<Props>();
+
+const emit = defineEmits<{
+    (e: 'onOpenEditModal'): void;
+}>();
 </script>
 
 <template>
     <v-header>
-        <h1 v-if="$slots.default" class="text-h3 text-white">
-            <slot />
-        </h1>
+        <slot />
 
         <template #actions>
-            <v-button>
-                <v-icon slot="icon-only" modifier="text-white" size="md" :icon="pencil" />
+            <v-button v-if="withEditMode" size="none" @click="emit('onOpenEditModal')">
+                <v-icon :icon="pencil" />
             </v-button>
         </template>
     </v-header>

@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/vue3';
-import VAnchorItem from '@/atom/item/VAnchorItem/VAnchorItem.vue';
 import { topic } from '@/presentation/static/topic';
+import VAnchorItem from '@/atom/item/VAnchorItem/VAnchorItem.vue';
 
 export default {
     component: VAnchorItem,

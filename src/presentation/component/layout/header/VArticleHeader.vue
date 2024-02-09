@@ -1,60 +1,103 @@
 <script setup lang="ts">
-import type { FavoriteTypeKey } from '@/data/storage/favoriteStorage';
+import type { FavoriteTypeKey } from '@/data/type/app/favorite';
+import type { ComputedRef } from 'vue';
 import { bookmark, bookmarkOutline } from 'ionicons/icons';
-import { createReactiveData } from '@/connection/helper/fetcher';
-import { setFavorite, getFavorite } from '@/store/favoriteStore';
+import { computed, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { isFavoriteType } from '@/data/type/app/favorite';
+import { useArticleState } from '@/state/articleState';
+import { getCollectionItemCount } from '@/store/collectionStore';
+import { toggleFavorite, useFavorite } from '@/store/favoriteStore';
+import { cn } from '@/presentation/helper/style';
 import VHeader from '@/layout/header/VHeader.vue';
-import VButton from '@/atom/button/VButton/VButton.vue';
+import VPillSlider from '@/molecule/slider/VPillSlider/VPillSlider.vue';
+import VCollectionCountIcon from '@/atom/icon/VCollectionCountIcon/VCollectionCountIcon.vue';
 import VIcon from '@/atom/icon/VIcon/VIcon.vue';
 
 interface Props {
     id: string;
     type: FavoriteTypeKey;
-    isCollection?: boolean;
+    anchors?: HTMLHeadingElement[];
 }
 
 const props = defineProps<Props>();
 
-const { data: favorite, getData: getFavoriteData } = createReactiveData<never, string | void>(
-    () => {
-        return getFavorite({
-            params: {
-                id: props.id,
-                type: props.type,
-            },
-        });
-    },
-)();
+const emit = defineEmits<{
+    (event: 'onOpenAddToCollection'): void;
+}>();
 
-async function toggleFavorite(): Promise<void> {
-    await setFavorite({
-        params: {
-            id: props.id,
-            type: 'issue',
-        },
+const articleState = useArticleState();
+const route = useRoute();
+
+const { data: favorite, getData: getFavorite } = useFavorite({
+    id: props.id,
+});
+
+async function toggleFavoriteState(): Promise<void> {
+    if (!isFavoriteType(props.type)) {
+        return;
+    }
+
+    await toggleFavorite({
+        id: props.id,
+        type: props.type,
     });
 
-    getFavoriteData();
+    getFavorite();
 }
 
-getFavoriteData();
+const collectionItemCountInAllCollections: ComputedRef<number> = computed(() => {
+    if (!articleState.collections) {
+        return 0;
+    }
+
+    return getCollectionItemCount({
+        collections: articleState.collections,
+        id: props.id,
+        type: props.type,
+    });
+});
+
+getFavorite();
+articleState.getCollections();
+
+watch(route, () => {
+    getFavorite();
+    articleState.getCollections();
+});
 </script>
 
 <template>
-    <v-header>
-        <h1 v-if="$slots.default" class="text-h3 text-white v-py-box-md">
-            <slot />
-        </h1>
+    <v-header class="article-header">
+        <template v-if="$slots['pre-title']" #pre-title>
+            <slot name="pre-title" />
+        </template>
+
+        <slot />
 
         <template #actions>
-            <v-button size="none">
-                <v-icon src="icon/collection.svg" />
-            </v-button>
+            <button
+                :class="
+                    cn('v-fill-transparent', {
+                        'v-fill-white': collectionItemCountInAllCollections,
+                    })
+                "
+                @click="emit('onOpenAddToCollection')"
+            >
+                <v-collection-count-icon>
+                    {{ collectionItemCountInAllCollections }}
+                </v-collection-count-icon>
+            </button>
 
-            <!--          @TODO: discuss slots-->
-            <v-button size="none" @click="toggleFavorite">
+            <button v-if="isFavoriteType(type)" class="v-ml-icon" @click="toggleFavoriteState">
                 <v-icon :icon="favorite ? bookmark : bookmarkOutline" />
-            </v-button>
+            </button>
+        </template>
+
+        <template v-if="anchors?.length" #after>
+            <v-pill-slider :slider-items="anchors" />
+
+            <slot name="after" />
         </template>
     </v-header>
 </template>

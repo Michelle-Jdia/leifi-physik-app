@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VTextIconItem > snapshot 1`] = `
+<div
+  class="text-icon-item v-flex v-items-center"
+>
+  <p
+    class="v-p v-capitalize"
+  >
+    
+    Mechanik
+    
+  </p>
+  <v-task-icon-stub
+    modifier="false"
+    src="icon/lamp.svg"
+    with-space-left=""
+  />
+</div>
+`;

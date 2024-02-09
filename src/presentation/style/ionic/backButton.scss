@@ -1,0 +1,11 @@
+ion-back-button {
+    @apply v-h-auto v-min-w-fit;
+
+    &::part(native) {
+        @apply v-p-0;
+    }
+
+    &::part(icon) {
+        @apply v-w-icon-default;
+    }
+}

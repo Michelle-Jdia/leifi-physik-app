@@ -4,4 +4,5 @@ export const branch = {
         src: '/image/category/mechanic/mechanic.svg',
         alt: 'mechanic',
     },
+    color: 'v-bg-ci_yellow_50',
 };

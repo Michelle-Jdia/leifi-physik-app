@@ -1,12 +1,12 @@
 @layer base {
     @for $i from 1 through 5 {
         .v-h#{$i} {
-            @apply v-text-h#{$i} md:v-text-h#{$i}-tablet v-text-ty-headline;
+            @apply v-text-h#{$i} md:v-text-h#{$i}-tablet v-font-bold v-leading-md v-text-ty-headline;
         }
     }
 
     .v-p {
-        @apply v-font-light v-leading-md;
+        @apply v-font-fflight;
     }
 
     .v-p,

@@ -5,11 +5,11 @@ import VBadge from '@/atom/badge/VBadge/VBadge.vue';
 import VIcon from '@/atom/icon/VIcon/VIcon.vue';
 
 interface Props {
-    title: string;
-    branch?: {
-        title: string;
-        color: string;
-    };
+    subtitle: string;
+    privateTitle: string;
+    isSubscribed?: boolean;
+    isLearnMode?: boolean;
+    learnStatus?: string;
     withNotification?: boolean;
     modifier?: ClassValue;
 }
@@ -21,15 +21,19 @@ defineProps<Props>();
     <div
         :class="
             cn(
-                'collection-item v-relative v-flex v-items-center v-justify-between v-rounded-sm v-border v-border-gray-20 v-bg-white v-p-box v-shadow',
+                'collection-item v-relative v-flex v-items-start v-justify-between v-rounded-sm v-border v-border-gray-20 v-bg-white v-p-box v-shadow',
                 modifier,
             )
         "
     >
-        <h3 class="v-h3">{{ title }}</h3>
+        <div>
+            <h3 class="v-h3">{{ privateTitle }}</h3>
+
+            <p class="v-p v-mt-1 v-text-gray">{{ subtitle }}</p>
+        </div>
 
         <v-icon
-            v-if="withNotification"
+            v-if="isSubscribed && withNotification"
             size="sm"
             data-testid="collection-item-notification"
             src="icon/ellipse.svg"
@@ -37,15 +41,16 @@ defineProps<Props>();
         />
 
         <v-icon
-            v-if="!branch"
+            v-if="isSubscribed"
             size="sm"
             data-testid="collection-item-feed"
             src="icon/bond.svg"
             with-space-left
+            modifier="v-text-primary"
         />
 
-        <v-badge v-if="branch" :style="branch.color" modifier="v-ml-box-sm">
-            {{ branch.title }}
+        <v-badge v-if="isLearnMode && learnStatus" modifier="v-ml-box-sm">
+            {{ learnStatus }}
         </v-badge>
     </div>
 </template>

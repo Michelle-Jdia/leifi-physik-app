@@ -30,6 +30,7 @@ describe('VPlaceholderButton', () => {
     });
 
     testSnapshot(VPlaceholderButton, options);
+
     testSnapshot(VPlaceholderButton, {
         ...options,
         props: {

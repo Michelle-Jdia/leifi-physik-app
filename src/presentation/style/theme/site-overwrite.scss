@@ -1,0 +1,50 @@
+.site {
+    span,
+    p,
+    figcaption,
+    table {
+        @apply v-font-fflight v-text-copy v-leading-lg v-text-ty-copy;
+    }
+
+    table,
+    table th,
+    table td {
+        @apply v-border v-border-gray;
+    }
+
+    ul,
+    ol {
+        @apply v-text-copy;
+
+        li {
+            @apply v-leading-lg;
+        }
+    }
+
+    figure {
+        .embedded-entity {
+            @apply max-md:v-pl-1 #{!important};
+        }
+    }
+
+    .topic_detail_page {
+        .topic_box {
+            @apply max-sm:v-px-box-lg;
+        }
+    }
+
+    mjx-frac {
+        @apply v-px-2;
+    }
+
+    mjx-container {
+        @apply v-overflow-x-auto v-overflow-y-hidden;
+
+        * {
+            line-height: 0.1;
+        }
+    }
+    input {
+        background-color: var(--ion-background-color);
+    }
+}

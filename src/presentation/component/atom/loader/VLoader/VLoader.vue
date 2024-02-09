@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { IonSpinner } from '@ionic/vue';
 import { computed } from 'vue';
 import { useLogState } from '@/connection/state/logState';
-import { IonSpinner } from '@ionic/vue';
 import { cn } from '@/presentation/helper/style';
 
 const logStore = useLogState();

@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import type { ClassValue } from 'clsx';
-import { cn } from '@/presentation/helper/style';
 import { IonToggle } from '@ionic/vue';
+import { cn } from '@/presentation/helper/style';
 
 interface Props {
     modifier?: ClassValue;
 }
+
+defineOptions({
+    inheritAttrs: false,
+});
 
 defineProps<Props>();
 </script>
@@ -14,7 +18,7 @@ defineProps<Props>();
     <div :class="cn('toggle v-flex v-items-center v-text-ty-headline', modifier)">
         <slot />
 
-        <ion-toggle v-bind="$attrs" />
+        <ion-toggle class="v-ml-box" v-bind="$attrs" />
     </div>
 </template>
 

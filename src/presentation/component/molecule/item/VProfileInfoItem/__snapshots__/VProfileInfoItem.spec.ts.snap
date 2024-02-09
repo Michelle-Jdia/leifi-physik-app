@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VProfileInfoItem > snapshot 1`] = `
+<div
+  class="profile-info-item v-flex v-justify-between v-py-box-md"
+>
+  <div>
+    <h4
+      class="v-h4"
+    >
+      
+      
+    </h4>
+    <p
+      class="v-h4 v-mt-box-sm v-inline-block v-font-fflight v-text-gray"
+    >
+      
+      Mia
+      
+    </p>
+  </div>
+  <v-button-stub
+    fill="clear"
+    isrounded="true"
+    modifier="v-h-max v-w-max v-font-bold v-underline"
+    size="none"
+  >
+     Bearbeiten 
+  </v-button-stub>
+</div>
+`;

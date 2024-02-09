@@ -8,6 +8,7 @@ export interface Props {
     title: string;
     subtitle?: string;
     isLearned?: boolean;
+    isFavorite?: boolean;
     withNotification?: boolean;
     modifier?: ClassValue;
 }
@@ -32,15 +33,19 @@ defineProps<Props>();
             modifier="v-absolute v-right-0 v-top-0 v--translate-y-2/4 v-translate-x-2/4"
         />
 
-        <v-badge v-if="!isLearned" modifier="v-mb-auto v-bg-gray-50">nicht gelernt</v-badge>
+        <div class="v-mb-auto">
+            <v-badge v-if="!isLearned" modifier="v-bg-gray-50 v-mr-box">nicht gelernt</v-badge>
+
+            <v-badge v-if="isFavorite" modifier="v-bg-gray-50">Favorit</v-badge>
+        </div>
 
         <div class="v-mt-box">
             <slot />
         </div>
 
-        <h4 class="v-h4">{{ title }}</h4>
+        <h4 class="v-h4 v-mt-1">{{ title }}</h4>
 
-        <h5 v-if="subtitle" class="v-h5 v-text-ty-helper">
+        <h5 v-if="subtitle" class="v-h5 v-mt-1 v-font-fflight v-text-ty-helper">
             {{ subtitle }}
         </h5>
     </div>

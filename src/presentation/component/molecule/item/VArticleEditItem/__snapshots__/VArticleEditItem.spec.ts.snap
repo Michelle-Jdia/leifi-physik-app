@@ -2,16 +2,19 @@
 
 exports[`VArticleEditItem > snapshot 1`] = `
 <div
-  class="article-edit-item v-flex v-items-center v-rounded v-bg-white v-p-box"
+  class="article-edit-item v-flex v-items-center v-rounded v-border v-border-gray-20 v-bg-white v-p-box"
   lines="none"
 >
   <v-checkbox-stub
+    modelvalue="false"
     modifier="v-mr-auto v-w-full"
     value="1"
   >
-    Mechanik 
+    
+    Mechanik
+    
     <div
-      class="v-h5 v-text-ty-helper"
+      class="v-h5 v-font-fflight v-text-ty-helper"
     >
       Grundwissen
     </div>
@@ -29,7 +32,7 @@ exports[`VArticleEditItem > snapshot 1`] = `
       withspaceright="false"
     />
     <anonymous-stub
-      class="v-ml-box-xl"
+      class="v-ml-box-xl v-text-ty-helper"
       routerlink="Symbol()"
       slot="end"
     >

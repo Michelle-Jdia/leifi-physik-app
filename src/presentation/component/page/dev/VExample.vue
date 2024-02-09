@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue';
+import { IonContent, IonPage } from '@ionic/vue';
 import { useExampleStore } from '@/connection/state/exampleState';
 import VHeader from '@/layout/header/VHeader.vue';
 

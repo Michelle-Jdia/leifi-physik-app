@@ -21,8 +21,6 @@ export const Base = Template.bind({});
 
 export const Small = Template.bind({});
 
-export const Large = Template.bind({});
-
 const iconSrc = '/icon/bond.svg';
 
 Base.args = {
@@ -34,10 +32,4 @@ Small.args = {
     // @ts-ignore
     src: iconSrc,
     size: 'sm',
-};
-
-Large.args = {
-    // @ts-ignore
-    src: iconSrc,
-    size: 'md',
 };

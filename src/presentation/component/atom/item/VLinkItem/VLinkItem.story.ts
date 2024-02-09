@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from '@storybook/vue3';
-import VLinkItem from '@/atom/item/VLinkItem/VLinkItem.vue';
 import { topic } from '@/presentation/static/topic';
+import VLinkItem from '@/atom/item/VLinkItem/VLinkItem.vue';
 
 export default {
     component: VLinkItem,
@@ -24,4 +24,22 @@ const Template: StoryFn<typeof VLinkItem> = (args) => ({
 
 export const Base = Template.bind({});
 
+export const Green = Template.bind({});
+
+export const Yellow = Template.bind({});
+
+export const Red = Template.bind({});
+
 Base.args = {};
+
+Green.args = {
+    level: 'green',
+};
+
+Yellow.args = {
+    level: 'yellow',
+};
+
+Red.args = {
+    level: 'red',
+};

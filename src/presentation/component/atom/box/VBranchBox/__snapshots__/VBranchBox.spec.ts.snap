@@ -14,7 +14,7 @@ exports[`VBranchBox > snapshot 1`] = `
     src="/image/category/mechanic/mechanic.svg"
   />
   <h2
-    class="v-ml-icon v-hyphens-auto v-font-light v-text-sm v-text-ty-headline md:v-text-h4"
+    class="v-ml-icon v-overflow-hidden v-hyphens-auto v-font-fflight v-text-sm v-text-ty-headline md:v-text-h4"
   >
     
     Mechanik

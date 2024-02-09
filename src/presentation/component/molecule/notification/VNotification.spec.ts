@@ -1,8 +1,8 @@
 import { render } from '@testing-library/vue';
 import { describe, expect, test } from 'vitest';
 import { testSnapshot } from '@/presentation/helper/test';
-import { topic } from '@/presentation/static/topic';
 import { branch } from '@/presentation/static/branch';
+import { topic } from '@/presentation/static/topic';
 import VNotification from '@/molecule/notification/VNotification.vue';
 
 describe('VNotification', () => {

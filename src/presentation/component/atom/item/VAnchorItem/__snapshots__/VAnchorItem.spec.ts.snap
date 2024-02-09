@@ -6,15 +6,14 @@ exports[`VAnchorItem > snapshot 1`] = `
 >
   <v-icon-stub
     class="v-mr-box-xs"
-    data-testid="link-icon"
+    icon="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='48' d='M184 112l144 144-144 144' class='ionicon-fill-none'/></svg>"
     modifier="false"
     size="sm"
-    src="icon/play.svg"
     withspaceleft="false"
     withspaceright="false"
   />
   <a
-    class="v-font-light v-leading-md v-text-primary v-underline"
+    class="v-font-fflight v-leading-md v-text-primary v-underline"
   >
     
     Mechanik

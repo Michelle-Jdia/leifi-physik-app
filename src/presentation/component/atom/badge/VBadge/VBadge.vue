@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { ClassValue } from 'clsx';
-import { cn } from '@/presentation/helper/style';
 import { IonBadge } from '@ionic/vue';
+import { cn } from '@/presentation/helper/style';
 
 interface Props {
-    modifier?: ClassValue;
     color?: string;
+    modifier?: ClassValue;
 }
 
 defineProps<Props>();
@@ -15,7 +15,7 @@ defineProps<Props>();
     <ion-badge
         :class="
             cn(
-                'badge v-rounded v-bg-gray-20 v-p-box-xs v-text-copy-xs v-text-ty-headline md:v-text-copy',
+                'badge v-rounded v-bg-gray-20 v-p-box-xs v-text-copy-xs v-text-ty-headline md:v-text-copy v-transition-colors',
                 modifier,
                 color,
             )

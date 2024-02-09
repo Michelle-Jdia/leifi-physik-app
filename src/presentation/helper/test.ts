@@ -1,6 +1,6 @@
 import type { ComponentMountingOptions } from '@vue/test-utils';
 import type { Component } from 'vue';
-import { mount, config } from '@vue/test-utils';
+import { config, mount } from '@vue/test-utils';
 import { expect, test } from 'vitest';
 
 beforeAll(() => {

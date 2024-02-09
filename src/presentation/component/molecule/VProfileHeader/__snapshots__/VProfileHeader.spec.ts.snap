@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VProfileHeader > snapshot 1`] = `
+<div
+  class="profile-header v-flex v-items-center"
+>
+  <v-avatar-stub
+    data-testid="avatar-component"
+    modifier="false"
+  />
+  <div
+    class="v-ml-box-md v-mr-1"
+  >
+    <h3
+      class="v-h3"
+    >
+      
+      
+    </h3>
+    <p
+      class="v-h4 v-mt-1 v-font-fflight v-text-ty-helper"
+    >
+      Profil anzeigen
+    </p>
+  </div>
+  <v-icon-stub
+    icon="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' class='ionicon' viewBox='0 0 512 512'><path stroke-linecap='round' stroke-linejoin='round' stroke-width='48' d='M184 112l144 144-144 144' class='ionicon-fill-none'/></svg>"
+    modifier="v-ml-auto"
+    size="default"
+    withspaceleft="false"
+    withspaceright="false"
+  />
+</div>
+`;

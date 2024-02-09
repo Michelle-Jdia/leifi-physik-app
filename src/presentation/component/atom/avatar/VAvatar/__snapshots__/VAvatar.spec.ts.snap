@@ -1,0 +1,14 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VAvatar > snapshot 1`] = `
+<anonymous-stub
+  class="avatar"
+  routerlink="Symbol()"
+>
+  <img
+    alt="avatar"
+    class="v-h-full v-w-full"
+    src="icon/arrow-left.svg"
+  />
+</anonymous-stub>
+`;
