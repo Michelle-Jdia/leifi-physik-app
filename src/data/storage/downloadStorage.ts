@@ -1,88 +1,96 @@
-import type { ReadDownloadInput } from '@/data/repository/downloadRepository';
+import type {
+    ReadDownloadByTopicInput,
+    ReadDownloadInput,
+} from '@/data/repository/downloadRepository';
 import type { Download } from '@/data/type/app/download';
-import { mergeDeepRight } from 'ramda';
-import { createStorage, createStorageHandler } from '@/data/helper/storage';
-
-/**
- * @deprecated We will most likely not be using Downloads in the app. If we do in the future, please bring up to date
- */
+import {
+    createStorage,
+    createStorageHandler,
+    defaultStorageReadMany,
+    defaultStorageReadSingle,
+} from '@/data/helper/storage';
 
 const downloadStorage = createStorage<{ [id: string]: Download }>('download');
 
 export const $useDownloadsStorage = createStorageHandler<ReadDownloadInput, Download[]>({
     async read() {
-        const downloads = await downloadStorage.read();
-
-        if (!downloads?.length) {
-            return;
-        }
-
-        return Object.values(downloads);
+        return defaultStorageReadMany(downloadStorage);
     },
 
     async write(data) {
-        const downloads = (await downloadStorage.read()) || {};
-
-        if (!data) {
+        if (!data.length) {
             return;
         }
 
-        data.forEach((download) => {
-            if (!downloads[download.id]) {
-                downloads[download.id] = download;
-            }
+        const downloads = (await downloadStorage.read()) || {};
 
-            if (downloads[download.id]) {
-                downloads[download.id] = mergeDeepRight(downloads[download.id] || {}, download);
-            }
+        data.forEach((download) => {
+            downloads[download.id] = download;
         });
 
-        downloadStorage.write(downloads);
+        return downloadStorage.write(downloads);
+    },
+});
+
+export const $useDownloadsByTopicStorage = createStorageHandler<
+    ReadDownloadByTopicInput,
+    Download[]
+>({
+    async read(input) {
+        const topicId = input?.params.topicId;
+
+        if (!topicId) {
+            return;
+        }
+
+        const downloads = (await downloadStorage.read()) || {};
+
+        if (!Object.values(downloads).length) {
+            return;
+        }
+
+        const downloadsByTopic = Object.values(downloads).filter(
+            (download) => download.referenced_topic === topicId,
+        );
+
+        if (!downloadsByTopic.length) {
+            return;
+        }
+
+        return downloadsByTopic;
+    },
+
+    async write(data) {
+        if (!data.length) {
+            return;
+        }
+
+        const downloads = (await downloadStorage.read()) || {};
+
+        data.forEach((download) => {
+            downloads[download.id] = download;
+        });
+
+        return downloadStorage.write(downloads);
     },
 });
 
 export const $useDownloadStorage = createStorageHandler<ReadDownloadInput, Download>({
     async read(input) {
-        const downloads = await downloadStorage.read();
-
-        if (!downloads?.length) {
-            return;
-        }
-
-        const downloadId = input?.params.id;
-
-        if (!downloadId || !downloads[downloadId]) {
-            return;
-        }
-
-        return downloads[downloadId];
+        return defaultStorageReadSingle(downloadStorage, input);
     },
 
     async write(data) {
-        const downloads = await downloadStorage.read();
-
-        if (!data) {
-            return;
-        }
-
         const downloadId = data.id;
 
-        if (!downloads) {
-            downloadStorage.write({
-                [downloadId]: data,
-            });
-
+        if (!downloadId) {
             return;
         }
 
-        if (!downloads[downloadId]) {
-            downloads[downloadId] = data;
-            downloadStorage.write(downloads);
+        const downloads = (await downloadStorage.read()) || {};
 
-            return;
-        }
+        downloads[downloadId] = data;
 
-        downloads[downloadId] = mergeDeepRight(downloads[downloadId] || {}, data);
-        downloadStorage.write(downloads);
+        return downloadStorage.write(downloads);
     },
 });

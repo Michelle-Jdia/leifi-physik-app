@@ -1,6 +1,6 @@
-import { defineStore } from 'pinia';
-import { reactive, computed } from 'vue';
 import type { ComputedRef } from 'vue';
+import { defineStore } from 'pinia';
+import { computed, reactive } from 'vue';
 
 export const exampleRootState = {
     firstName: '',

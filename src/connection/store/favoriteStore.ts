@@ -1,51 +1,46 @@
-import type { ReadFavoriteInput, FavoriteStorage } from '@/data/storage/favoriteStorage';
-import { $useFavoritesStorage, $useFavoriteStorage } from '@/data/storage/favoriteStorage';
+import type { ReadFavoriteInput } from '@/data/storage/favoriteStorage';
+import type { Favorite } from '@/data/type/app/favorite';
+import {
+    $deleteFavoriteStorage,
+    $favoriteStorage,
+    $readFavoriteStorage,
+    $writeFavoriteStorage,
+} from '@/data/storage/favoriteStorage';
 import { createReactiveData } from '@/connection/helper/fetcher';
+import { createToast } from '@/connection/helper/toast';
 
-export async function getFavorites(input: ReadFavoriteInput) {
-    return $useFavoritesStorage.read(input);
-}
-
-export async function getFavoriteIssues() {
-    return $useFavoritesStorage.read({
-        params: {
-            type: 'issue',
-        },
-    });
-}
-
-export async function getFavoriteTasks() {
-    return $useFavoritesStorage.read({
-        params: {
-            type: 'task',
-        },
-    });
-}
-
-export async function getFavorite(input: ReadFavoriteInput) {
-    return $useFavoriteStorage.read(input);
-}
-
-export const useFavoriteIssues = createReactiveData<never, FavoriteStorage | void>(
-    getFavoriteIssues,
+export const useFavorite = createReactiveData<ReadFavoriteInput, Favorite | void>(
+    $readFavoriteStorage,
 );
 
-export async function setFavoriteIssue(id: string) {
-    return $useFavoriteStorage.write(id, {
-        params: {
-            id,
-            type: 'issue',
-        },
+export const useFavorites = createReactiveData($favoriteStorage.read);
+
+export async function addFavorite(favorite: Favorite): Promise<void> {
+    await $writeFavoriteStorage(favorite);
+
+    createToast('Der Artikel wurde zu Deinen Favoriten hinzugefügt', {
+        color: 'success',
     });
 }
 
-export async function setFavorite(input: ReadFavoriteInput) {
-    // everything should already be in input, but storage interface awaits 2 args, where first arg should be a data object
-    return $useFavoriteStorage.write(input.params.id || '', input);
+export async function removeFavorite(favorite: Favorite): Promise<void> {
+    await $deleteFavoriteStorage(favorite);
+
+    createToast('Der Artikel wurde von Deinen Favoriten entfernt', {
+        color: 'success',
+    });
 }
 
-export async function isFavoriteObject(input: ReadFavoriteInput): Promise<boolean> {
-    const res = await $useFavoriteStorage.read(input);
+export async function toggleFavorite(favorite: Favorite): Promise<void> {
+    const favoriteInStorage = await $readFavoriteStorage(favorite);
 
-    return Boolean(res);
+    if (!favoriteInStorage) {
+        return addFavorite(favorite);
+    }
+
+    return removeFavorite(favorite);
+}
+
+export function setFavorites(favorites: Favorite[]): Promise<void> {
+    return $favoriteStorage.write(favorites);
 }

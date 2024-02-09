@@ -1,6 +1,7 @@
 import type { MediaApi } from '@/data/type/api/field/mediaApi';
-import type { TextApi } from '@/data/type/api/field/textApi';
 import type { ObjectRelationApi } from '@/data/type/api/field/objectRelationApi';
+import type { RenderedStringApiWithoutMeta } from '@/data/type/api/field/renderedStringApi';
+import type { TextApi } from '@/data/type/api/field/textApi';
 
 export interface DownloadApi {
     id: string;
@@ -9,7 +10,7 @@ export interface DownloadApi {
     title: string;
     field_animation_background: string | null;
     field_animation_caption: string | null;
-    field_animation_code: string | null;
+    field_animation_code: RenderedStringApiWithoutMeta;
     field_animation_intro: string | null;
     field_animation_type: string | null;
     field_download_description: TextApi;

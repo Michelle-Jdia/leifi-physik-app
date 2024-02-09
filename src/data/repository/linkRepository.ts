@@ -8,7 +8,7 @@ export interface ReadLinkInput {
 }
 
 export interface ReadLinkOutput {
-    data: [LinkApi];
+    data: LinkApi[];
     // included?: [ColorApi?, IconApi?, FileApi?];
 }
 
@@ -17,23 +17,23 @@ const defaultParams = {
     //     'field_link_type',
     // 'field_referenced_topic',
     // ].join(),
-    jsonapi_include: 1,
+    jsonapi_include: '1',
 };
 
 export const $readLink = createEndpoint<ReadLinkInput, ReadLinkOutput>({
     link: 'link',
-    configureAxios: (axiosConfig) => {
+    configureEndpoint: (axiosConfig) => {
         return {
             ...axiosConfig,
             params: {
                 ...defaultParams,
-                'filter[id]': axiosConfig.params.id,
+                'filter[id]': axiosConfig.params?.id || '',
             },
         };
     },
 });
 
-export const $readLinks = createEndpoint<never, ReadLinkOutput>({
+export const $readLinks = createEndpoint<ReadLinkOutput>({
     link: 'link',
     params: {
         ...defaultParams,

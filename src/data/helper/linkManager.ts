@@ -1,8 +1,7 @@
 import { isDev } from '@/env/app';
 
-// @todo move to .env
 const devUrl = 'https://www.app-api-dm4xeuy-bwyzh75a7hm5c.eu-2.platformsh.site';
-const prodUrl = 'https://www.app-api-dm4xeuy-bwyzh75a7hm5c.eu-2.platformsh.site';
+const prodUrl = 'https://www.leifiphysik.de';
 
 export const baseUrl = isDev ? devUrl : prodUrl;
 
@@ -15,7 +14,10 @@ const LINKS = {
     download: `${baseEndpoint}/node/download`,
     issue: `${baseEndpoint}/node/issue`,
     link: `${baseEndpoint}/node/link`,
+    search: `${baseEndpoint}/index/default_index`,
+    solved: `${baseEndpoint}/taxonomy_term/solved`,
     stategrade: `${baseEndpoint}/taxonomy_term/state_grade`,
+    subtitle: `${baseEndpoint}/taxonomy_term/subtitle`,
     task: `${baseEndpoint}/node/task`,
     topic: `${baseEndpoint}/taxonomy_term/topic`,
 };

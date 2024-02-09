@@ -7,8 +7,14 @@ export interface ReadDownloadInput {
     };
 }
 
+export interface ReadDownloadByTopicInput {
+    params: {
+        topicId: string;
+    };
+}
+
 export interface ReadDownloadOutput {
-    data: [DownloadApi];
+    data: DownloadApi[];
 }
 
 const defaultParams = {
@@ -19,25 +25,38 @@ const defaultParams = {
     // 'field_referenced_topic',
     // ].join(),
     // 'fields[media--image]': 'field_media_image',
-    jsonapi_include: 1,
+    jsonapi_include: '1',
 };
 
 export const $readDownload = createEndpoint<ReadDownloadInput, ReadDownloadOutput>({
     link: 'download',
-    configureAxios: (axiosConfig) => {
+    configureEndpoint: (axiosConfig) => {
         return {
             ...axiosConfig,
             params: {
                 ...defaultParams,
-                'filter[id]': axiosConfig.params.id,
+                'filter[id]': axiosConfig.params?.id || '',
             },
         };
     },
 });
 
-export const $readDownloads = createEndpoint<never, ReadDownloadOutput>({
+export const $readDownloads = createEndpoint<ReadDownloadOutput>({
     link: 'download',
     params: {
         ...defaultParams,
+    },
+});
+
+export const $readDownloadsByTopic = createEndpoint<ReadDownloadByTopicInput, ReadDownloadOutput>({
+    link: 'download',
+    configureEndpoint: (axiosConfig) => {
+        return {
+            ...axiosConfig,
+            params: {
+                ...defaultParams,
+                'filter[field_referenced_topic.id]': axiosConfig.params?.topicId || '',
+            },
+        };
     },
 });

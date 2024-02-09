@@ -8,28 +8,28 @@ export interface ReadStateGradeInput {
 }
 
 export interface ReadStateGradeOutput {
-    data: [StateGradeApi];
+    data: StateGradeApi[];
 }
 
 const defaultParams = {
     // include: ['field_state_grade_icon.field_media_image'].join(),
-    jsonapi_include: 1,
+    jsonapi_include: '1',
 };
 
 export const $readStateGrade = createEndpoint<ReadStateGradeInput, ReadStateGradeOutput>({
     link: 'stategrade',
-    configureAxios: (axiosConfig) => {
+    configureEndpoint: (axiosConfig) => {
         return {
             ...axiosConfig,
             params: {
                 ...defaultParams,
-                'filter[id]': axiosConfig.params.id,
+                'filter[id]': axiosConfig.params?.id || '',
             },
         };
     },
 });
 
-export const $readStateGrades = createEndpoint<never, ReadStateGradeOutput>({
+export const $readStateGrades = createEndpoint<ReadStateGradeOutput>({
     link: 'stategrade',
     params: {
         ...defaultParams,

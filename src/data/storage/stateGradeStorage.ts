@@ -1,6 +1,5 @@
 import type { ReadStateGradeInput } from '@/data/repository/stateGradeRepository';
 import type { StateGrade } from '@/data/type/app/stateGrade';
-import { mergeDeepRight } from 'ramda';
 import { createStorage, createStorageHandler } from '@/data/helper/storage';
 
 const stateGradeStorage = createStorage<{ [id: string]: StateGrade }>('stateGrade');
@@ -20,16 +19,7 @@ export const $useStateGradesStorage = createStorageHandler<ReadStateGradeInput, 
         const stateGrades = (await stateGradeStorage.read()) || {};
 
         data.forEach((stateGrade) => {
-            if (!stateGrades[stateGrade.id]) {
-                stateGrades[stateGrade.id] = stateGrade;
-            }
-
-            if (stateGrades[stateGrade.id]) {
-                stateGrades[stateGrade.id] = mergeDeepRight(
-                    stateGrades[stateGrade.id] || {},
-                    stateGrade,
-                );
-            }
+            stateGrades[stateGrade.id] = stateGrade;
         });
 
         return stateGradeStorage.write(stateGrades);
@@ -53,19 +43,7 @@ export const $useStateGradeStorage = createStorageHandler<ReadStateGradeInput, S
         const stateGrades = (await stateGradeStorage.read()) || {};
         const stateGradeId = data.id;
 
-        if (!Object.keys(stateGrades).length) {
-            return stateGradeStorage.write({
-                [stateGradeId]: data,
-            });
-        }
-
-        if (!stateGrades[stateGradeId]) {
-            stateGrades[stateGradeId] = data;
-
-            return stateGradeStorage.write(stateGrades);
-        }
-
-        stateGrades[stateGradeId] = mergeDeepRight(stateGrades[stateGradeId] || {}, data);
+        stateGrades[stateGradeId] = data;
 
         return stateGradeStorage.write(stateGrades);
     },

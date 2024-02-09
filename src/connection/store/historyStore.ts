@@ -1,26 +1,33 @@
-import { $useHistoryStorage, $useHistoriesStorage } from '@/src/data/storage/histroryStorage';
+import { $historyStorage, $writeHistoryStorage } from '@/data/storage/historyStorage';
+import { ContentType } from '@/data/type/helper/contentType';
+import { createReactiveData } from '@/connection/helper/fetcher';
+
+export const useHistory = createReactiveData($historyStorage.read);
 
 export function getHistory() {
-    return $useHistoriesStorage.read();
+    return $historyStorage.read();
 }
 
-export function setTaskHistory(id: string) {
-    return $useHistoryStorage.write({
+export function addTaskToHistory(id: string) {
+    return $writeHistoryStorage({
         id,
-        type: 'task',
+        type: ContentType.TASK,
+        timestamp: new Date().getTime(),
     });
 }
 
-export function setTopicHistory(id: string) {
-    return $useHistoryStorage.write({
+export function addIssueToHistory(id: string) {
+    return $writeHistoryStorage({
         id,
-        type: 'topic',
+        type: ContentType.ISSUE,
+        timestamp: new Date().getTime(),
     });
 }
 
-export function setIssueHistory(id: string) {
-    return $useHistoryStorage.write({
+export function addDownloadToHistory(id: string) {
+    return $writeHistoryStorage({
         id,
-        type: 'issue',
+        type: ContentType.DOWNLOAD,
+        timestamp: new Date().getTime(),
     });
 }

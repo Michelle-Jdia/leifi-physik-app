@@ -1,14 +1,14 @@
+import type { ReadStateGradeInput } from '@/data/repository/stateGradeRepository';
 import type { StateGradeApi } from '@/data/type/api/stateGradeApi';
 import type { StateGrade } from '@/data/type/app/stateGrade';
-import type { ReadStateGradeInput } from '@/data/repository/stateGradeRepository';
-import { $readStateGrades, $readStateGrade } from '@/data/repository/stateGradeRepository';
-import { $useStateGradeStorage, $useStateGradesStorage } from '@/data/storage/stateGradeStorage';
-import { createFetcher } from '@/connection/helper/fetcher';
+import { $readStateGrade, $readStateGrades } from '@/data/repository/stateGradeRepository';
+import { $useStateGradesStorage, $useStateGradeStorage } from '@/data/storage/stateGradeStorage';
 import {
     parseDateStringToTimestamp,
     parseMediaItem,
     parseValueToString,
 } from '@/connection/helper/dataMap';
+import { createFetcher } from '@/connection/helper/fetcher';
 
 function createStateGrade(input: StateGradeApi): StateGrade {
     return {
@@ -24,6 +24,10 @@ export const getStateGrades = createFetcher<never, StateGrade[]>(
     async () => {
         const { data } = await $readStateGrades();
 
+        if (!data.data?.length) {
+            return;
+        }
+
         return data.data.map(createStateGrade);
     },
     $useStateGradesStorage,
@@ -35,6 +39,11 @@ export const getStateGrades = createFetcher<never, StateGrade[]>(
 export const getStateGrade = createFetcher<ReadStateGradeInput, StateGrade>(
     async (input) => {
         const { data } = await $readStateGrade(input);
+
+        if (!data || !data.data || !data.data[0]) {
+            return;
+        }
+
         const firstItem = data.data[0];
 
         return createStateGrade(firstItem);

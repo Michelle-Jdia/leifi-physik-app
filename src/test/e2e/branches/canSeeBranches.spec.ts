@@ -1,5 +1,4 @@
-import { test } from '@playwright/test';
-import { expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('Branches page is rendered', async ({ page }, testInfo) => {
     await page.goto('/branches', {
