@@ -1,6 +1,7 @@
+import { breakpoints } from './src/presentation/helper/breakpoint';
+
 /** @type {import('tailwindcss').Config} */
 require('dotenv').config();
-import { breakpoints } from './src/presentation/helper/breakpoint';
 
 const defaultTheme = require('tailwindcss/defaultTheme');
 const isDev = process.env.NODE_ENV !== 'production';
@@ -21,14 +22,15 @@ export default {
     darkMode: isDev ? 'class' : 'media',
     theme: {
         screens: {
+            sm: `${breakpoints.mobile}px`,
             md: `${breakpoints.tablet}px`,
         },
         fontFamily: {
             // dont use sans in classes
             // https://tailwindcss.com/docs/font-family#customizing-the-default-font
             sans: ['ffmilowebpromed', ...defaultTheme.fontFamily.sans],
-            base: 'ffmilowebpromed',
-            light: 'ffmilowebprolight',
+            ffbase: 'ffmilowebpromed',
+            fflight: 'ffmilowebprolight',
         },
         colors: {
             white: {
@@ -57,6 +59,7 @@ export default {
             },
             gray: {
                 DEFAULT: 'var(--ion-color-gray-100)',
+                80: 'var(--ion-color-gray-80)',
                 50: 'var(--ion-color-gray-50)',
                 20: 'var(--ion-color-gray-20)',
             },
@@ -125,25 +128,35 @@ export default {
             'h3-tablet': '1.5rem',
             'h4-tablet': '1.25rem',
             'h5-tablet': '1rem',
-            'copy-xs': '0.625rem',
+            'copy-xs': '0.7rem',
             copy: '1rem',
             'copy-tablet': '1.25rem',
             label: '0.875rem',
             sm: '0.875rem',
         },
         lineHeight: {
-            default: '1.12rem',
-            md: '1.5rem',
+            default: '1.2',
+            md: '1.3',
+            lg: '1.5',
         },
         borderRadius: {
             sm: '4px',
             DEFAULT: '6px',
-            md: '9px',
+            md: '12px',
             lg: '24px',
         },
         extend: {
+            width: {
+                'icon-default': '1.25rem',
+            },
+            minWidth: {
+                'icon-default': '1.25rem',
+            },
             zIndex: {
-                loader: 100,
+                loader: 1000,
+            },
+            maxWidth: {
+                content: '75rem',
             },
         },
     },
